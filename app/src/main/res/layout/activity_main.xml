@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="signIn"
     android:layout_centerInParent="true"
-    tools:context=".MainActivity">
+    android:clickable="false"
+    android:contextClickable="false"
+    android:onClick="signIn"
+    tools:context=".LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -48,6 +50,8 @@
         android:autofillHints=""
         android:ems="10"
         android:inputType="textEmailAddress"
+        android:textColor="@drawable/edit_text_selector"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +61,7 @@
         android:id="@+id/passwordTextField"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
         android:autofillHints=""
         android:ems="10"
         android:inputType="textPassword"
@@ -66,25 +70,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailTextField" />
 
-    <Button
-        android:id="@+id/SignInButton"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:onClick="signIn"
-        android:text="@string/sign_in"
-        android:textColor="#FAF7F7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTextField" />
-
     <TextView
         android:id="@+id/SignUpLabel"
         android:layout_width="166dp"
         android:layout_height="18dp"
-        android:layout_marginTop="10dp"
         android:clickable="true"
         android:onClick="signUp"
         android:text="@string/sign_up"
@@ -97,21 +86,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SignInButton"
-        app:layout_constraintVertical_bias="0.077" />
+        app:layout_constraintTop_toBottomOf="@+id/signInButton"
+        app:layout_constraintVertical_bias="0.098" />
+
+    <Button
+        android:id="@+id/signInButton"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:alpha="0.3"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="false"
+        android:enabled="false"
+        android:onClick="signIn"
+        android:text="@string/sign_in"
+        android:textColor="#FAF7F7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/singInAsGuestSwitch" />
 
     <Switch
         android:id="@+id/singInAsGuestSwitch"
-        android:layout_width="299dp"
-        android:layout_height="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="25dp"
         android:text="@string/sign_in_as_guest"
         android:textAlignment="viewStart"
-        app:layout_constraintBottom_toTopOf="@+id/SignInButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.779"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTextField"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextField" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

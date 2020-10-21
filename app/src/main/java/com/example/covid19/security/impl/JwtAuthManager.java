@@ -1,18 +1,30 @@
 package com.example.covid19.security.impl;
 
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.loader.content.AsyncTaskLoader;
+
 import com.example.covid19.model.AuthRequest;
+import com.example.covid19.model.HttpClient;
 import com.example.covid19.model.UnauthorizedException;
 import com.example.covid19.security.AuthManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import okhttp3.Response;
 
 
 public class JwtAuthManager implements AuthManager {
 
+    private Context context;
+    private HttpClient httpClient;
 
-  //  private static final HttpRequest httpRequest= new HttpRequest();
 
     private static JwtAuthManager instance;
 
@@ -20,12 +32,16 @@ public class JwtAuthManager implements AuthManager {
 
     private final  static Gson gsonConverter=new Gson();
 
-    private JwtAuthManager(){ }
 
-    public static JwtAuthManager getInstance(){
+    private JwtAuthManager(Context context){
+        this.context=context;
+        httpClient= new HttpClient(context);
+    }
+
+    public static JwtAuthManager getInstance(Context context){
         if(instance == null) {
             synchronized (JwtAuthManager.class) {
-                instance = new JwtAuthManager();
+                instance = new JwtAuthManager(context);
             }
         }
         return instance;
@@ -34,50 +50,68 @@ public class JwtAuthManager implements AuthManager {
 
     @Override
     public boolean loginWithUsername(String username, String password)   throws UnauthorizedException {
-/*
-        String json = gsonConverter.toJson(new AuthRequest( username,null ,password));
-        try{
-            HttpResponse<String> httpResponse = httpRequest.requestPost(json, "/signin/public/authenticate", false, null);
-            if(httpResponse.statusCode() == 200 && !httpResponse.body().isEmpty()){
-                jwtToken=httpResponse.body();
-                HttpResponse<String> httpResponseIsAdmin=httpRequest.requestGet("/user/isAdmin?token="+jwtToken,true,jwtToken);
-                if(httpResponseIsAdmin.statusCode() == 200 && httpResponseIsAdmin.body().equals("true")){
-                    return true;
-                }else {
-                    throw  new UnauthorizedException();
+
+        final String json = gsonConverter.toJson(new AuthRequest( username, null ,password));
+
+        AsyncTask<String, Void,Boolean> asyncTask=new AsyncTask<String,Void,Boolean>(){
+            @Override
+            protected Boolean doInBackground(String... strings) {
+                try{
+                    Response response= httpClient.requestPost("signin/public/authenticate", strings[0],false, null);
+                    if( response.isSuccessful()){
+                        jwtToken=response.body().string();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }catch (IOException ioException){
+                    ioException.fillInStackTrace();
+                    return false;
                 }
-            }else {
-                return false;
             }
-        } catch (IOException | InterruptedException e) {
+        };
+
+        try {
+            Boolean ris=asyncTask.execute(json).get();
+            Log.d("Tets",ris.toString());
+            return ris ;
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             return false;
-        }*/
-        return true;
+        }
     }
 
     @Override
     public boolean loginWithEmail(String email, String password) throws UnauthorizedException {
-/*
-        String json = gsonConverter.toJson(new AuthRequest( null,email ,password));
-        try{
-            HttpResponse<String> httpResponse = httpRequest.requestPost(json, "/signin/public/authenticate", false, null);
-            if(httpResponse.statusCode() == 200 && !httpResponse.body().isEmpty()){
-                jwtToken=httpResponse.body();
-                HttpResponse<String> httpResponseIsAdmin=httpRequest.requestGet("/user/isAdmin?token="+jwtToken,true,jwtToken);
-                if(httpResponseIsAdmin.statusCode() == 200 && httpResponseIsAdmin.body().equals("true")){
-                    return true;
-                }else {
-                    throw  new UnauthorizedException();
+
+        final String json = gsonConverter.toJson(new AuthRequest( null, email ,password));
+
+        AsyncTask<String, Void,Boolean> asyncTask=new AsyncTask<String,Void,Boolean>(){
+            @Override
+            protected Boolean doInBackground(String... strings) {
+                try{
+                    Response response= httpClient.requestPost("signin/public/authenticate", strings[0],false, null);
+                    if( response.isSuccessful()){
+                        jwtToken=response.body().string();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }catch (IOException ioException){
+                    ioException.fillInStackTrace();
+                    return false;
                 }
-            }else {
-                return false;
             }
-        } catch (IOException | InterruptedException e) {
+        };
+
+        try {
+            Boolean ris=asyncTask.execute(json).get();
+            Log.d("Tets",ris.toString());
+            return ris ;
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             return false;
-        }*/
-        return true;
+        }
     }
 
     @Override

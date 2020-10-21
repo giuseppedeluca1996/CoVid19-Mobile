@@ -1,6 +1,12 @@
 package com.example.covid19.model;
 
 
+import android.content.Context;
+import android.util.Log;
+
+import com.example.covid19.util.Util;
+
+import java.io.IOException;
 import java.util.Objects;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -13,64 +19,61 @@ public class HttpClient {
 
     private final OkHttpClient client = new OkHttpClient();
     private  HttpUrl httpUrl;
-
+    private Context context;
 
     private  String serverUrl;
     private  String initEndPoint;
 
-    public String requestGet(String endPoint){
+    public HttpClient(Context context){
+        this.context=context;
+        try {
+            serverUrl = Util.getProperty("server.url",context);
+            initEndPoint = Util.getProperty("initEndPoint.url",context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Response requestGet(String endPoint,boolean authorization, final String jwtToken) throws IOException {
+        Request request;
 
         httpUrl = Objects.requireNonNull(HttpUrl.parse(serverUrl+initEndPoint+endPoint)).newBuilder()
                 .build();
 
-        Request request = new Request.Builder()
-                .url(httpUrl)
-                .build();
-
-        try {
-            Response response=client.newCall(request).execute();
-            if(response.isSuccessful()){
-                return response.body().string();
-            }
-        }catch (Throwable e){
-            e.printStackTrace();
+        if(authorization){
+            request = new Request.Builder()
+                    .url(httpUrl)
+                    .build();
+        }else {
+            request = new Request.Builder()
+                    .url(httpUrl)
+                    .addHeader("Authorization", "Bearer "+jwtToken)
+                    .build();
         }
-        return null;
+        return client.newCall(request).execute();
+
     }
 
-    public String requestPost(String endPoint, String body){
+    public Response requestPost(String endPoint, String body,boolean authorization, final String jwtToken) throws IOException {
+
+        Request request;
 
         httpUrl = Objects.requireNonNull(HttpUrl.parse(serverUrl+initEndPoint+endPoint)).newBuilder()
                 .build();
 
-        Request request = new Request.Builder()
-                .url(httpUrl)
-                .post(RequestBody.create(body,MediaType.parse("application/json; charset=utf-8")))
-                .build();
-        try {
-            Response response=client.newCall(request).execute();
-            if(response.isSuccessful()){
-                return response.body().string();
-            }
-        }catch (Throwable e){
-            e.printStackTrace();
+        if(authorization){
+            request = new Request.Builder()
+                    .url(httpUrl)
+                    .post(RequestBody.create(body,MediaType.parse("application/json; charset=utf-8"))).addHeader("Authorization", "Bearer "+jwtToken)
+                    .build();
+        }else {
+             request = new Request.Builder()
+                    .url(httpUrl)
+                    .post(RequestBody.create(body,MediaType.parse("application/json; charset=utf-8")))
+                    .build();
         }
-        return null;
+        return client.newCall(request).execute();
+
     }
 
-    public String getServerUrl() {
-        return serverUrl;
-    }
-
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
-    }
-
-    public String getInitEndPoint() {
-        return initEndPoint;
-    }
-
-    public void setInitEndPoint(String initEndPoint) {
-        this.initEndPoint = initEndPoint;
-    }
 }
