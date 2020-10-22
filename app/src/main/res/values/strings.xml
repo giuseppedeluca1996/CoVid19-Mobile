@@ -1,6 +1,28 @@
 <resources>
     <string name="app_name">CoVid19</string>
     <string name="sign_in">Sign In</string>
-    <string name="sign_up"><u>Not registered yet? Sign Up</u></string>
+    <string name="not_registered_yet"><u>Not registered yet? Sign Up</u></string>
+    <string name="sign_up">Sign Up</string>
     <string name="sign_in_as_guest">Sign In as a guest</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="preferences_view">Do you want other user to see your full name?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="gender">Gender</string>
+    <string name="email_or_username">Email or Username</string>
+    <string name="title_activity_home_page_actibity">HomePageActibity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

@@ -1,50 +1,43 @@
 package com.example.covid19;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.covid19.controller.SignInController;
-import com.example.covid19.model.HttpClient;
+import com.example.covid19.controller.SignUpController;
 
-import okhttp3.OkHttpClient;
 
-public class LoginActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
 
     EditText emailTextField;
     EditText passwordTextField;
     Switch singInAsGuestSwitch;
     Button signInButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        setContentView(R.layout.activity_sign_in);
         emailTextField=findViewById(R.id.emailTextField);
         passwordTextField=findViewById(R.id.passwordTextField);
         singInAsGuestSwitch=findViewById(R.id.singInAsGuestSwitch);
         signInButton=findViewById(R.id.signInButton);
 
         singInAsGuestSwitch.setChecked(false);
-
         signInButton.setClickable(false);
         signInButton.setEnabled(false);
-        signInButton.setFocusable(false);
         signInButton.setAlpha(0.3F);
-
 
         singInAsGuestSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -99,13 +92,10 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-                // TODO Auto-generated method stub
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
         });
-
 
         passwordTextField.addTextChangedListener(new TextWatcher() {
 
@@ -130,11 +120,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         SignInController.setContext(this);
-
+        SignUpController.setContext(this);
     }
 
     public void signUp(View view) {
 
+        SignUpController.showSignUpScreen();
 
     }
 
@@ -142,11 +133,12 @@ public class LoginActivity extends AppCompatActivity {
         if(signInButton.isEnabled()){
             if(singInAsGuestSwitch.isChecked()){
                SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),true);
-
             }else {
                 if(!SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),false)){
                     passwordTextField.getText().clear();
                     emailTextField.getText().clear();
+                    Toast toast = Toast.makeText(this, "Credential are not valid", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         }

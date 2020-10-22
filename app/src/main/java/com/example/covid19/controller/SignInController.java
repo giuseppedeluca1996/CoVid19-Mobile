@@ -30,9 +30,6 @@ public class SignInController {
                 try{
                     if(authManager.loginWithEmail(usernameOrEmail,password)){
                         return  true;
-                    }else {
-                        Toast toast = Toast.makeText(context, "Email or password are not valid", Toast.LENGTH_SHORT);
-                        toast.show();
                     }
                 }catch (UnauthorizedException ue){
                     ue.printStackTrace();
@@ -41,9 +38,6 @@ public class SignInController {
                 try{
                     if(authManager.loginWithUsername(usernameOrEmail,password)){
                         return true;
-                    }else {
-                        Toast toast = Toast.makeText(context, "Username or password are not valid", Toast.LENGTH_SHORT);
-                        toast.show();
                     }
                 }catch (UnauthorizedException ue){
                     ue.printStackTrace();

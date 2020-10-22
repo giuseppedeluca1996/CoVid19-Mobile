@@ -65,16 +65,14 @@ public class JwtAuthManager implements AuthManager {
                         return false;
                     }
                 }catch (IOException ioException){
-                    ioException.fillInStackTrace();
+                    ioException.printStackTrace();
                     return false;
                 }
             }
         };
 
         try {
-            Boolean ris=asyncTask.execute(json).get();
-            Log.d("Tets",ris.toString());
-            return ris ;
+            return asyncTask.execute(json).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             return false;
@@ -98,16 +96,14 @@ public class JwtAuthManager implements AuthManager {
                         return false;
                     }
                 }catch (IOException ioException){
-                    ioException.fillInStackTrace();
+                    ioException.printStackTrace();
                     return false;
                 }
             }
         };
 
         try {
-            Boolean ris=asyncTask.execute(json).get();
-            Log.d("Tets",ris.toString());
-            return ris ;
+            return asyncTask.execute(json).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             return false;

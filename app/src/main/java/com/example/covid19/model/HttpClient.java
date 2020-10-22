@@ -40,7 +40,7 @@ public class HttpClient {
         httpUrl = Objects.requireNonNull(HttpUrl.parse(serverUrl+initEndPoint+endPoint)).newBuilder()
                 .build();
 
-        if(authorization){
+        if(!authorization){
             request = new Request.Builder()
                     .url(httpUrl)
                     .build();
@@ -64,7 +64,8 @@ public class HttpClient {
         if(authorization){
             request = new Request.Builder()
                     .url(httpUrl)
-                    .post(RequestBody.create(body,MediaType.parse("application/json; charset=utf-8"))).addHeader("Authorization", "Bearer "+jwtToken)
+                    .post(RequestBody.create(body,MediaType.parse("application/json; charset=utf-8")))
+                    .addHeader("Authorization", "Bearer "+jwtToken)
                     .build();
         }else {
              request = new Request.Builder()
