@@ -1,10 +1,17 @@
 package com.example.covid19;
 
+
+import android.content.DialogInterface;
+import android.content.Intent;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import com.example.covid19.controller.HomePageController;
 
 public class HomePageFragment extends Fragment implements View.OnClickListener {
 
@@ -69,8 +78,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         imageViewHomePageFragment.setScaleType(ImageView.ScaleType.FIT_XY);
         imageViewMapHomePaqeFragment=view.findViewById(R.id.imageViewMapHomePaqeFragment);
         imageViewMapHomePaqeFragment.setScaleType(ImageView.ScaleType.FIT_XY);
-
-
+        imageViewMapHomePaqeFragment.setOnClickListener(this);
          hotelButton=view.findViewById(R.id.imageButtonHotel);
          attractionButton=view.findViewById(R.id.imageButtonAttraction);
          restaurantButton=view.findViewById(R.id.imageButtonRestaurant);
@@ -82,29 +90,47 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
-
-
     public void onClick(View view){
         switch (view.getId()){
             case R.id.imageButtonHotel:{
-                /*******/
             }break;
             case R.id.imageButtonAttraction:{
-                /********/
             }break;
             case R.id.imageButtonRestaurant:{
-                /****/
             }break;
             case R.id.imageViewMapHomePaqeFragment:{
-                /*****/
+               if(HomePageController.showMap()){
+                   Navigation.findNavController(view).navigate(R.id.action_homePage_to_mapsFragment);
+                }else {
+                   showGPSDisabledAlertToUser();
+               }
             }break;
             case R.id.whereDoYouWantGoButton:{
-                /*****/
             }break;
             default:{
 
             }
         }
+    }
+
+    private  void showGPSDisabledAlertToUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Enable GPS",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }

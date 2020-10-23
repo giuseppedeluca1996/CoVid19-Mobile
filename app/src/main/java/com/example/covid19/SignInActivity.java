@@ -150,7 +150,7 @@ public class SignInActivity extends AppCompatActivity {
     public void signIn(View view) {
         if(signInButton.isEnabled()){
             if(singInAsGuestSwitch.isChecked()){
-               SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),true);
+                SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),true);
                 HomePageController.showHomePage(this);
             }else {
                 if(!SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),false)){

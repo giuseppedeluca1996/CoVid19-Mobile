@@ -2,8 +2,15 @@ package com.example.covid19;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +25,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
 
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -31,9 +43,14 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+          //  locationManager.ge
+            LatLng localUser = new LatLng(-34, 151);
+            //googleMap.addMarker(new MarkerOptions().position(localUser).title("YouAre"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(localUser));
         }
     };
 
@@ -42,7 +59,16 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        locationManager=(LocationManager)this.getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationListener=new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+
+            }
+        };
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
+
     }
 
     @Override
