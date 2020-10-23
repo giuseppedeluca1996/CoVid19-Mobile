@@ -22,7 +22,7 @@ import android.widget.ImageView;
 
 import com.example.covid19.controller.HomePageController;
 
-public class HomePageFragment extends Fragment implements View.OnClickListener {
+public class HomePageFragment extends Fragment {
 
     private ImageView imageViewHomePageFragment;
     private ImageView imageViewMapHomePaqeFragment;
@@ -68,7 +68,6 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_page, container, false);
     }
     @Override
@@ -78,40 +77,34 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         imageViewHomePageFragment.setScaleType(ImageView.ScaleType.FIT_XY);
         imageViewMapHomePaqeFragment=view.findViewById(R.id.imageViewMapHomePaqeFragment);
         imageViewMapHomePaqeFragment.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageViewMapHomePaqeFragment.setOnClickListener(this);
          hotelButton=view.findViewById(R.id.imageButtonHotel);
          attractionButton=view.findViewById(R.id.imageButtonAttraction);
          restaurantButton=view.findViewById(R.id.imageButtonRestaurant);
          whereDoYouWantGo=view.findViewById(R.id.whereDoYouWantGoButton);
-         hotelButton.setOnClickListener(this);
-         attractionButton.setOnClickListener(this);
-         restaurantButton.setOnClickListener(this);
-         whereDoYouWantGo.setOnClickListener(this);
-    }
 
 
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.imageButtonHotel:{
-            }break;
-            case R.id.imageButtonAttraction:{
-            }break;
-            case R.id.imageButtonRestaurant:{
-            }break;
-            case R.id.imageViewMapHomePaqeFragment:{
-               if(HomePageController.showMap()){
-                   Navigation.findNavController(view).navigate(R.id.action_homePage_to_mapsFragment);
+         whereDoYouWantGo.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Navigation.findNavController(v).navigate(R.id.action_homepage_to_search_fragment);
+             }
+         });
+
+        imageViewMapHomePaqeFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(HomePageController.showMap()){
+                    Navigation.findNavController(v).navigate(R.id.action_homePage_to_mapsFragment);
                 }else {
-                   showGPSDisabledAlertToUser();
-               }
-            }break;
-            case R.id.whereDoYouWantGoButton:{
-            }break;
-            default:{
+                    showGPSDisabledAlertToUser();
+                }
+
 
             }
-        }
+        });
     }
+
+
 
     private  void showGPSDisabledAlertToUser(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());

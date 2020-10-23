@@ -32,6 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="350dp"
             android:background="#A9FBF9F9"
+            android:contentDescription="@string/napoliImg"
             android:src="@drawable/home_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +45,7 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/planeimg"
             android:elevation="5dp"
             android:rotation="33"
             android:src="@drawable/ic_baseline_airplanemode_active_24"
@@ -70,6 +72,7 @@
                 android:layout_width="133dp"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/hotelimg"
                 android:src="@drawable/ic_baseline_hotel_24"
                 android:tint="@color/colorBlackBackground" />
 
@@ -78,6 +81,7 @@
                 android:layout_width="139dp"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/resraurantimg"
                 android:src="@drawable/ic_baseline_restaurant_menu_24"
                 android:tint="@color/colorBlackBackground" />
 
@@ -86,6 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/attractionimg"
                 android:src="@drawable/ic_ride" />
         </LinearLayout>
 
@@ -94,11 +99,12 @@
             android:layout_width="0dp"
             android:layout_height="218dp"
             android:layout_marginBottom="10dp"
+            android:contentDescription="@string/mapimg"
             android:src="@drawable/mappa_home_image"
             app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textView"
@@ -117,11 +123,13 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/positionImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="68dp"
             android:layout_marginEnd="108dp"
+            android:clickable="true"
+            android:contentDescription="@string/nearmeimg"
             android:src="@drawable/ic_baseline_place_24"
             app:layout_constraintBottom_toTopOf="@+id/imageViewMapHomePaqeFragment"
             app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +137,6 @@
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"
             app:layout_constraintVertical_bias="1.0"
-            android:clickable="true"
             app:tint="@color/colorPrimary" />
 
         <TextView

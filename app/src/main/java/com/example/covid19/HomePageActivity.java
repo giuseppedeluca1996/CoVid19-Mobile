@@ -2,6 +2,7 @@ package com.example.covid19;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 
 import com.example.covid19.controller.HomePageController;
@@ -15,4 +16,5 @@ public class HomePageActivity extends AppCompatActivity {
 
         HomePageController.setContext(this);
     }
+
 }
