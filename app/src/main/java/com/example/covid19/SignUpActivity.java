@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -197,6 +199,7 @@ public class SignUpActivity extends AppCompatActivity  {
         });
 
 
+        SignUpController.setContext(this);
     }
 
 
@@ -278,4 +281,10 @@ public class SignUpActivity extends AppCompatActivity  {
            }
         }
     }
+
+
+    public static void showSignUpScreen(Context context) {
+        context.startActivity(new Intent(context, SignUpActivity.class));
+    }
+
 }

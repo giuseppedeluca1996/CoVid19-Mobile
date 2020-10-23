@@ -72,6 +72,7 @@ public class SpringUserDao extends UserDao {
         return null;
     }
 
+
     @Override
     public Map<String,Object> getAll(Integer page, Integer size) {
         return null;

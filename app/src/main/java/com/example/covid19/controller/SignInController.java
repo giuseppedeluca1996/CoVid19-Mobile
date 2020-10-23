@@ -3,6 +3,8 @@ package com.example.covid19.controller;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.covid19.HomePageActivity;
+import com.example.covid19.SignUpActivity;
 import com.example.covid19.model.UnauthorizedException;
 import com.example.covid19.security.AuthManager;
 import com.example.covid19.security.AuthManagerFactory;
@@ -16,19 +18,19 @@ public class SignInController {
     private static  Context context;
     private static AuthManager authManager;
 
-
     public static Boolean signIn(String usernameOrEmail, String password, boolean asAGuest){
         if(asAGuest){
+            showHomePage();
             return true;
         }else {
 
             String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(usernameOrEmail);
-
             if(matcher.matches()){
                 try{
                     if(authManager.loginWithEmail(usernameOrEmail,password)){
+                        showHomePage();
                         return  true;
                     }
                 }catch (UnauthorizedException ue){
@@ -37,6 +39,7 @@ public class SignInController {
             }else {
                 try{
                     if(authManager.loginWithUsername(usernameOrEmail,password)){
+                        showHomePage();
                         return true;
                     }
                 }catch (UnauthorizedException ue){
@@ -45,6 +48,10 @@ public class SignInController {
             }
         }
         return false;
+    }
+
+    public static void showHomePage() {
+        HomePageActivity.showHomePageScreen(context);
     }
 
     public static void setContext(Context context) {

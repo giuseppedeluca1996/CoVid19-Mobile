@@ -1,44 +1,46 @@
 package com.example.covid19.model;
 
+
+import com.google.gson.annotations.Expose;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 
 public class Structure {
 
+    @Expose
     private Integer id;
-
+    @Expose
     private String name;
-
+    @Expose
     private String address;
-
+    @Expose
     private String imageLink;
-
+    @Expose
     private String site;
-
+    @Expose
     private String email;
-
+    @Expose
     private String state;
-
+    @Expose
     private String city;
-
+    @Expose
     private String phone;
-
+    @Expose
     private Type type;
-
+    @Expose
     private Double priceMin;
-
+    @Expose
     private Double priceMax;
-
+    @Expose
     private BigDecimal latitude;
-
+    @Expose
     private BigDecimal longitude;
-
+    @Expose
     private Date closingHours;
-
+    @Expose
     private Date openingHours;
-
-    private Double averageRating;
 
     public Structure() {
     }
@@ -171,14 +173,6 @@ public class Structure {
         this.openingHours = openingHours;
     }
 
-    public Double getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(Double averageRating) {
-        this.averageRating = averageRating;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -208,9 +202,7 @@ public class Structure {
             return false;
         if (closingHours != null ? !closingHours.equals(structure.closingHours) : structure.closingHours != null)
             return false;
-        if (openingHours != null ? !openingHours.equals(structure.openingHours) : structure.openingHours != null)
-            return false;
-        return averageRating != null ? averageRating.equals(structure.averageRating) : structure.averageRating == null;
+        return openingHours != null ? openingHours.equals(structure.openingHours) : structure.openingHours == null;
     }
 
     @Override
@@ -231,7 +223,6 @@ public class Structure {
         result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
         result = 31 * result + (closingHours != null ? closingHours.hashCode() : 0);
         result = 31 * result + (openingHours != null ? openingHours.hashCode() : 0);
-        result = 31 * result + (averageRating != null ? averageRating.hashCode() : 0);
         return result;
     }
 }

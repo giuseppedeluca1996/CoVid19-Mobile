@@ -15,11 +15,6 @@ public class SignUpController {
     private static Context context;
     private static UserDao userDao;
 
-
-    public static void showSignUpScreen() {
-        context.startActivity(new Intent(context, SignUpActivity.class));
-    }
-
     public static void setContext(Context context) {
         SignUpController.context = context;
         userDao=Objects.requireNonNull(DaoFactory.getDaoFactory(context)).getUserDao();
@@ -35,13 +30,17 @@ public class SignUpController {
 
     public static Boolean saveUser(User user){
         userDao.save(user);
-        if(userDao.getById(user.getId()) !=null && SignInController.signIn(user.getUsername(),user.getPassword(),false)){
+        if( SignInController.signIn(user.getUsername(),user.getPassword(),false)){
             HomePageController.showHomePage(context);
             return true;
 
         }else {
             return false;
         }
+    }
+
+    public static void signUp(){
+        SignUpActivity.showSignUpScreen(context);
     }
 
 

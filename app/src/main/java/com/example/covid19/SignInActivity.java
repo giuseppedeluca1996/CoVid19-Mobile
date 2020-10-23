@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.example.covid19.controller.HomePageController;
 import com.example.covid19.controller.SignInController;
 import com.example.covid19.controller.SignUpController;
 
@@ -142,24 +141,19 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     public void signUp(View view) {
-
-        SignUpController.showSignUpScreen();
-
+        SignUpController.signUp();
     }
 
     public void signIn(View view) {
         if(signInButton.isEnabled()){
             if(singInAsGuestSwitch.isChecked()){
                 SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),true);
-                HomePageController.showHomePage(this);
             }else {
                 if(!SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),false)){
                     passwordTextField.getText().clear();
                     emailTextField.getText().clear();
                     Toast toast = Toast.makeText(this, "Credential are not valid", Toast.LENGTH_SHORT);
                     toast.show();
-                }else {
-                    HomePageController.showHomePage(this);
                 }
             }
         }

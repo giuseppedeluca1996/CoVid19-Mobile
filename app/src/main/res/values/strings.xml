@@ -19,5 +19,6 @@
     <string name="where_do_you_want_to_go">Where do you want go?</string>
     <string name="discover_nearby_places">Discover nearby places</string>
     <string name="powered_by">Powered by CoVid19</string>
+    <string name="research">Research</string>
 
 </resources>

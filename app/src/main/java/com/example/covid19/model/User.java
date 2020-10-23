@@ -1,6 +1,7 @@
 package com.example.covid19.model;
 
 
+
 import java.util.Date;
 
 public class User {

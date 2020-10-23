@@ -6,11 +6,15 @@ import android.location.LocationManager;
 
 
 import com.example.covid19.HomePageActivity;
+import com.example.covid19.model.Structure;
+
+import java.util.Collection;
 
 
 public class HomePageController {
 
     private static  Context context;
+
 
     public static void showHomePage(Context context) {
         context.startActivity(new Intent(context, HomePageActivity.class));

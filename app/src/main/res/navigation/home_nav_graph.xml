@@ -17,5 +17,9 @@
         android:id="@+id/mapsFragment"
         android:name="com.example.covid19.MapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_mapsFragment_to_homePage"
+            app:destination="@id/homePage" />
+    </fragment>
 </navigation>

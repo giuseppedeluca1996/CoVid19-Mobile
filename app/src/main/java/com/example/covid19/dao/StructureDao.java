@@ -3,6 +3,8 @@ package com.example.covid19.dao;
 
 import com.example.covid19.model.Structure;
 
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Map;
 
 public abstract class StructureDao implements AbstractDao<Structure> {
@@ -34,5 +36,5 @@ public abstract class StructureDao implements AbstractDao<Structure> {
 
     public abstract Map<String, Object> getAllAttractionByText(Integer page, Integer size, String text);
 
-
+    public abstract Collection<Structure> getStructureAtDistance(BigDecimal latitude, BigDecimal longitude, BigDecimal distance);
 }

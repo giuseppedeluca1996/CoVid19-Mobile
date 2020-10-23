@@ -2,13 +2,24 @@ package com.example.covid19.dao.impl;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.covid19.dao.StructureDao;
 import com.example.covid19.model.HttpClient;
 import com.example.covid19.model.Structure;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import okhttp3.Response;
 
 public class SpringStructureDao extends StructureDao {
 
@@ -17,7 +28,7 @@ public class SpringStructureDao extends StructureDao {
     private Gson gson;
 
     private SpringStructureDao(Context context){
-        gson= new GsonBuilder().setDateFormat("HH:mm:ss").excludeFieldsWithoutExposeAnnotation().create();
+        gson= new GsonBuilder().setDateFormat("hh:mm:ss").excludeFieldsWithoutExposeAnnotation().create();
         httpClient=new HttpClient(context);
     }
 
@@ -53,199 +64,71 @@ public class SpringStructureDao extends StructureDao {
 
     @Override
     public Map<String, Object> getAll(Integer page, Integer size) {
-       /* Map<String, Object> map =new HashMap<>();
-        map.put("numberOfTotalItems",0);
-        map.put("collectionItems", null);
-        map.put("sizeCollectionItems", 0);
-        try {
-            HttpResponse<String> response= httpRequest.requestGet("/structure/public/getAllStructures?page=" + page + "&size=" +size, false,null);
 
-            if (response.statusCode()==200 ) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(response.body());
-                    if(!(Boolean )jsonObject.get("empty")){
-                        JSONArray userContent = (JSONArray) jsonObject.get("content");
-                        map.replace("collectionItems", gson.fromJson(userContent.toJSONString(), new TypeToken<List<Structure>>() {}.getType()));
-                        map.replace("numberOfTotalItems", Integer.valueOf(jsonObject.get("totalElements").toString()));
-                        map.replace("sizeCollectionItems", Integer.valueOf(jsonObject.get("numberOfElements").toString()));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return map;*/
         return null;
     }
 
     @Override
     public Map<String, Object> getAllHotel(Integer page, Integer size) {
-      /*  Map<String, Object> map =new HashMap<>();
-        map.put("numberOfTotalItems",0);
-        map.put("collectionItems", null);
-        map.put("sizeCollectionItems", 0);
-        try {
-            HttpResponse<String> response= httpRequest.requestGet("/structure/public/getAllStructures/HOTEL?page=" + page + "&size=" +size, false,null);
-            if (response.statusCode()==200 ) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(response.body());
-                    if(!(Boolean )jsonObject.get("empty")){
-                        JSONArray userContent = (JSONArray) jsonObject.get("content");
-                        map.replace("collectionItems", gson.fromJson(userContent.toJSONString(), new TypeToken<List<Structure>>() {}.getType()));
-                        map.replace("numberOfTotalItems", Integer.valueOf(jsonObject.get("totalElements").toString()));
-                        map.replace("sizeCollectionItems", Integer.valueOf(jsonObject.get("numberOfElements").toString()));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return map;*/
+
         return null;
     }
 
     @Override
     public Map<String, Object> getAllRestaurant(Integer page, Integer size) {
-    /*    Map<String, Object> map =new HashMap<>();
-        map.put("numberOfTotalItems",0);
-        map.put("collectionItems", null);
-        map.put("sizeCollectionItems", 0);
-        try {
-            HttpResponse<String> response= httpRequest.requestGet("/structure/public/getAllStructures/RESTAURANT?page=" + page + "&size=" +size, false,null);
-            if (response.statusCode()==200 ) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(response.body());
-                    if(!(Boolean )jsonObject.get("empty")){
-                        JSONArray userContent = (JSONArray) jsonObject.get("content");
-                        map.replace("collectionItems", gson.fromJson(userContent.toJSONString(), new TypeToken<List<Structure>>() {}.getType()));
-                        map.replace("numberOfTotalItems", Integer.valueOf(jsonObject.get("totalElements").toString()));
-                        map.replace("sizeCollectionItems", Integer.valueOf(jsonObject.get("numberOfElements").toString()));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return map;*/
+
         return null;
     }
 
     @Override
     public Map<String, Object> getAllAttraction(Integer page, Integer size) {
-      /*  Map<String, Object> map =new HashMap<>();
-        map.put("numberOfTotalItems",0);
-        map.put("collectionItems", null);
-        map.put("sizeCollectionItems", 0);
-        try {
-            HttpResponse<String> response= httpRequest.requestGet("/structure/public/getAllStructures/ATTRACTION?page=" + page + "&size=" +size, false,null);
-            if (response.statusCode()==200 ) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(response.body());
-                    if(!(Boolean )jsonObject.get("empty")){
-                        JSONArray userContent = (JSONArray) jsonObject.get("content");
-                        map.replace("collectionItems", gson.fromJson(userContent.toJSONString(), new TypeToken<List<Structure>>() {}.getType()));
-                        map.replace("numberOfTotalItems", Integer.valueOf(jsonObject.get("totalElements").toString()));
-                        map.replace("sizeCollectionItems", Integer.valueOf(jsonObject.get("numberOfElements").toString()));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return map;*/
+
         return null;
     }
 
     @Override
     public Map<String, Object> getAllHotelByText(Integer page, Integer size, String text){
-       /* Map<String, Object> map =new HashMap<>();
-        map.put("numberOfTotalItems",0);
-        map.put("collectionItems", null);
-        map.put("sizeCollectionItems", 0);
-        try {
-            HttpResponse<String> response= httpRequest.requestGet("/structure/public/getAllStructuresByText/HOTEL/"+text+"?page=" + page + "&size=" +size, false,null);
-            if (response.statusCode()==200 ) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(response.body());
-                    if(!(Boolean )jsonObject.get("empty")){
-                        JSONArray userContent = (JSONArray) jsonObject.get("content");
-                        map.replace("collectionItems", gson.fromJson(userContent.toJSONString(), new TypeToken<List<Structure>>() {}.getType()));
-                        map.replace("numberOfTotalItems", Integer.valueOf(jsonObject.get("totalElements").toString()));
-                        map.replace("sizeCollectionItems", Integer.valueOf(jsonObject.get("numberOfElements").toString()));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return map;*/
+
         return null;
     }
 
     @Override
     public Map<String, Object> getAllRestaurantByText(Integer page, Integer size, String text){
-     /*   Map<String, Object> map =new HashMap<>();
-        map.put("numberOfTotalItems",0);
-        map.put("collectionItems", null);
-        map.put("sizeCollectionItems", 0);
-        try {
-            HttpResponse<String> response= httpRequest.requestGet("/structure/public/getAllStructuresByText/RESTAURANT/"+text+"?page=" + page + "&size=" +size, false,null);
-            if (response.statusCode()==200 ) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(response.body());
-                    if(!(Boolean )jsonObject.get("empty")){
-                        JSONArray userContent = (JSONArray) jsonObject.get("content");
-                        map.replace("collectionItems", gson.fromJson(userContent.toJSONString(), new TypeToken<List<Structure>>() {}.getType()));
-                        map.replace("numberOfTotalItems", Integer.valueOf(jsonObject.get("totalElements").toString()));
-                        map.replace("sizeCollectionItems", Integer.valueOf(jsonObject.get("numberOfElements").toString()));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return map;*/
+
         return null;
     }
 
     @Override
     public Map<String, Object> getAllAttractionByText(Integer page, Integer size, String text){
-       /* Map<String, Object> map =new HashMap<>();
-        map.put("numberOfTotalItems",0);
-        map.put("collectionItems", null);
-        map.put("sizeCollectionItems", 0);
-        try {
-            HttpResponse<String> response= httpRequest.requestGet("/structure/public/getAllStructuresByText/ATTRACTION/"+text+"?page=" + page + "&size=" +size, false,null);
-            if (response.statusCode()==200 ) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONParser().parse(response.body());
-                    if(!(Boolean )jsonObject.get("empty")){
-                        JSONArray userContent = (JSONArray) jsonObject.get("content");
-                        map.replace("collectionItems", gson.fromJson(userContent.toJSONString(), new TypeToken<List<Structure>>() {}.getType()));
-                        map.replace("numberOfTotalItems", Integer.valueOf(jsonObject.get("totalElements").toString()));
-                        map.replace("sizeCollectionItems", Integer.valueOf(jsonObject.get("numberOfElements").toString()));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return map;*/
+
         return null;
     }
 
+
+    @Override
+    public Collection<Structure> getStructureAtDistance(final BigDecimal latitude, BigDecimal longitude, BigDecimal distance) {
+        AsyncTask<BigDecimal, Void,Collection<Structure>> asyncTask=new AsyncTask<BigDecimal,Void,Collection<Structure>>(){
+            @Override
+            protected Collection<Structure> doInBackground(BigDecimal... bigDecimals) {
+                try{
+                    Response response=httpClient.requestGet("structure/public/getStructureAtDistance?latitude=" +
+                            bigDecimals[0] + "&longitude=" +
+                            bigDecimals[1] + "&distance=" + bigDecimals[2],false,null);
+                    if( response.isSuccessful()){
+                        return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
+                    }
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        try {
+            return asyncTask.execute(latitude,longitude,distance).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
