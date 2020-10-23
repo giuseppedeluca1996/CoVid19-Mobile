@@ -2,19 +2,24 @@ package com.example.covid19;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.example.covid19.controller.HomePageController;
 import com.example.covid19.controller.SignInController;
 import com.example.covid19.controller.SignUpController;
+
 
 
 public class SignInActivity extends AppCompatActivity {
@@ -43,7 +48,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     emailTextField.setEnabled(false);
-                   emailTextField.setCursorVisible(false);
+                    emailTextField.setCursorVisible(false);
                     emailTextField.setTextColor(Color.GRAY);
                     passwordTextField.setEnabled(false);
                     passwordTextField.setCursorVisible(false);
@@ -119,6 +124,19 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
+
+        findViewById(R.id.layoutParentSignInActivity).setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(getCurrentFocus()!= null && getCurrentFocus().getWindowToken() != null){
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+                return true;
+            }
+        });
+
         SignInController.setContext(this);
         SignUpController.setContext(this);
     }
@@ -133,14 +151,22 @@ public class SignInActivity extends AppCompatActivity {
         if(signInButton.isEnabled()){
             if(singInAsGuestSwitch.isChecked()){
                SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),true);
+                HomePageController.showHomePage(this);
             }else {
                 if(!SignInController.signIn(emailTextField.getText().toString(),passwordTextField.getText().toString(),false)){
                     passwordTextField.getText().clear();
                     emailTextField.getText().clear();
                     Toast toast = Toast.makeText(this, "Credential are not valid", Toast.LENGTH_SHORT);
                     toast.show();
+                }else {
+                    HomePageController.showHomePage(this);
                 }
             }
         }
     }
+
+
+
+
+
 }

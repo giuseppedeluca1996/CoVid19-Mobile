@@ -16,13 +16,8 @@
     <string name="date_of_birth">Date of birth</string>
     <string name="gender">Gender</string>
     <string name="email_or_username">Email or Username</string>
-    <string name="title_activity_home_page_actibity">HomePageActibity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="where_do_you_want_to_go">Where do you want go?</string>
+    <string name="discover_nearby_places">Discover nearby places</string>
+    <string name="powered_by">Powered by CoVid19</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutParentSignUpActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
@@ -47,7 +48,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailTextField2" />
+        app:layout_constraintTop_toBottomOf="@+id/emailTextField2"
+        android:theme="@style/EditTextTheme"/>
 
     <Switch
         android:id="@+id/preferencesViewSwitch"
@@ -58,6 +60,7 @@
         android:textOff="@string/no"
         android:textOn="@string/yes"
         android:textSize="12sp"
+        android:thumbTint="#1589FF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +92,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.104"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmPasswordTextField" />
+        app:layout_constraintTop_toBottomOf="@+id/confirmPasswordTextField"
+        android:theme="@style/EditTextTheme"/>
 
     <EditText
         android:id="@+id/confirmPasswordTextField"
@@ -103,7 +107,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTextField2" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextField2"
+        android:theme="@style/EditTextTheme"/>
 
     <EditText
         android:id="@+id/passwordTextField2"
@@ -117,7 +122,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/surnameTextField" />
+        app:layout_constraintTop_toBottomOf="@+id/surnameTextField"
+        android:theme="@style/EditTextTheme"/>
 
     <EditText
         android:id="@+id/surnameTextField"
@@ -131,13 +137,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextField" />
+        app:layout_constraintTop_toBottomOf="@+id/nameTextField"
+        android:theme="@style/EditTextTheme"/>
 
     <EditText
         android:id="@+id/emailTextField2"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/email"
@@ -145,7 +152,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+        android:theme="@style/EditTextTheme"/>
 
     <EditText
         android:id="@+id/nameTextField"
@@ -159,7 +167,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameTextField" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextField"
+        android:theme="@style/EditTextTheme"/>
 
     <Spinner
         android:id="@+id/genderComboBox"
@@ -178,8 +187,9 @@
         android:id="@+id/signUpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/colorPrimary"
+        android:fontFamily="sans-serif-medium"
         android:onClick="signUp"
         android:text="@string/sign_up"
         android:textColor="#FFFFFF"
@@ -188,7 +198,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/preferencesViewSwitch"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.052" />
 
     <ImageButton
         android:id="@+id/calendarButton"

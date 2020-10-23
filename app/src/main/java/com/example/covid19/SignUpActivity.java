@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -179,6 +181,18 @@ public class SignUpActivity extends AppCompatActivity  {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+        });
+
+
+        findViewById(R.id.layoutParentSignUpActivity).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(getCurrentFocus()!= null && getCurrentFocus().getWindowToken() != null){
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+                return true;
             }
         });
 

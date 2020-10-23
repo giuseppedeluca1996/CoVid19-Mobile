@@ -36,11 +36,7 @@ public class SignUpController {
     public static Boolean saveUser(User user){
         userDao.save(user);
         if(userDao.getById(user.getId()) !=null && SignInController.signIn(user.getUsername(),user.getPassword(),false)){
-            /**
-             * show home paged
-             *
-             *
-             **/
+            HomePageController.showHomePage(context);
             return true;
 
         }else {
