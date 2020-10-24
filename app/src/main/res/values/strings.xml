@@ -19,6 +19,18 @@
     <string name="where_do_you_want_to_go">Where do you want go?</string>
     <string name="discover_nearby_places">Discover nearby places</string>
     <string name="powered_by">Powered by CoVid19</string>
+    <string name="around_you">Around you</string>
+    <string name="backbtn">backButton</string>
+    <string name="aroundyouImage">aroundYouImg</string>
+    <string name="search">Search</string>
+    <string name="napoliImg">TODO</string>
+    <string name="planeimg">planeImg</string>
+    <string name="hotelimg">hotelImg</string>
+    <string name="resraurantimg">resraurantImg</string>
+    <string name="attractionimg">attractionImg</string>
+    <string name="mapimg">mapImg</string>
+    <string name="nearmeimg">nearMeImg</string>
+    <string name="textview">TextView</string>
     <string name="research">Research</string>
 
 </resources>
