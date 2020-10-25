@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.covid19.controller.HomePageController;
-import com.example.covid19.controller.ResearchController;
+import com.example.covid19.controller.SearchController;
 
 public class HomePageActivity extends AppCompatActivity {
 
@@ -17,7 +17,7 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
 
         HomePageController.setContext(this);
-        ResearchController.setContext(this);
+        SearchController.setContext(this);
     }
     public static void showHomePageScreen(Context context) {
         context.startActivity(new Intent(context,HomePageActivity.class));

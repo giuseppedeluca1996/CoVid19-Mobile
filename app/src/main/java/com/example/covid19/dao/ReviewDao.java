@@ -32,4 +32,7 @@ public abstract class ReviewDao implements AbstractDao<Review> {
     public Map<String, Object> getAll(Integer page, Integer size) {
         return null;
     }
+
+
+    public abstract Double getAvgRating(Integer idStructure);
 }

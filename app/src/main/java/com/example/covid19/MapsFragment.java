@@ -19,18 +19,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.example.covid19.controller.ResearchController;
+import com.example.covid19.controller.SearchController;
 import com.example.covid19.model.Structure;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
-import com.google.maps.android.SphericalUtil;
 
 import java.util.Collection;
 
@@ -48,18 +46,19 @@ public class MapsFragment extends Fragment {
 
     GoogleMap map;
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 LatLng latLng = new LatLng(locationGPS.getLatitude(),locationGPS.getLongitude());
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,12.0f));
                 googleMap.setMyLocationEnabled(true);
                 map=googleMap;
             }
-            populateMap(googleMap);
+            if(structures !=null)
+                populateMap(googleMap);
         }
     };
 
@@ -71,20 +70,20 @@ public class MapsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
 
-        locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager)requireActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener= new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 lastLocation= new LatLng(location.getLatitude(), location.getLongitude());
             }
         };
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             lastLocation=new LatLng(location.getLatitude(),location.getLongitude());
 
         }
-        structures=ResearchController.getStructureAtDistance(lastLocation,DISTANCE_DEFAULT);
+        structures= SearchController.getStructureAtDistance(lastLocation,DISTANCE_DEFAULT);
         return inflater.inflate(R.layout.fragment_maps, container, false);
 
     }
@@ -112,8 +111,8 @@ public class MapsFragment extends Fragment {
             public void onClick(View v) {
                 map.clear();
                 Double distance = getFocusDistance();
-                structures=ResearchController.getStructureAtDistance(map.getCameraPosition().target, distance);
-                populateMap(map);
+               if ( (structures= SearchController.getStructureAtDistance(map.getCameraPosition().target, distance)) != null)
+                    populateMap(map);
 
             }
         });

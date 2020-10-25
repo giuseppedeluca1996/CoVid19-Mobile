@@ -3,11 +3,11 @@ package com.example.covid19.dao.impl;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.covid19.dao.StructureDao;
 import com.example.covid19.model.HttpClient;
 import com.example.covid19.model.Structure;
+import com.example.covid19.model.Type;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -106,10 +106,10 @@ public class SpringStructureDao extends StructureDao {
 
 
     @Override
-    public Collection<Structure> getStructureAtDistance(final BigDecimal latitude, BigDecimal longitude, BigDecimal distance) {
-        AsyncTask<BigDecimal, Void,Collection<Structure>> asyncTask=new AsyncTask<BigDecimal,Void,Collection<Structure>>(){
+    public List<Structure> getStructureAtDistance(final BigDecimal latitude, BigDecimal longitude, BigDecimal distance) {
+        AsyncTask<BigDecimal, Void,List<Structure>> asyncTask=new AsyncTask<BigDecimal,Void,List<Structure>>(){
             @Override
-            protected Collection<Structure> doInBackground(BigDecimal... bigDecimals) {
+            protected List<Structure> doInBackground(BigDecimal... bigDecimals) {
                 try{
                     Response response=httpClient.requestGet("structure/public/getStructureAtDistance?latitude=" +
                             bigDecimals[0] + "&longitude=" +
@@ -126,6 +126,142 @@ public class SpringStructureDao extends StructureDao {
 
         try {
             return asyncTask.execute(latitude,longitude,distance).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Structure> getStructureAroundYou(BigDecimal latitude, BigDecimal longitude, Type type) {
+        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
+            @Override
+            protected List<Structure> doInBackground(Object... objects) {
+                try{
+                    Response response=httpClient.requestGet("structure/public/getStructureAroundYou?latitude=" +
+                            objects[0] + "&longitude=" +
+                            objects[1] + "&type=" +
+                            objects[2].toString(),false,null);
+                    if( response.isSuccessful()){
+                        return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
+                    }
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        try {
+            return asyncTask.execute(latitude,longitude,type).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Structure> getStructureAroundYou(BigDecimal latitude, BigDecimal longitude) {
+        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
+            @Override
+            protected List<Structure> doInBackground(Object... objects) {
+                try{
+                    Response response=httpClient.requestGet("structure/public/getStructureAroundYou?latitude=" +
+                            objects[0] + "&longitude=" +
+                            objects[1],false,null);
+                    if( response.isSuccessful()){
+                        return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
+                    }
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        try {
+            return asyncTask.execute(latitude,longitude).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<Structure> getStructureByText(String query, Type type) {
+        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
+            @Override
+            protected List<Structure> doInBackground(Object... objects) {
+                try{
+                    Response response=httpClient.requestGet("structure/public/getAllStructuresByTextNotPaginable/" +
+                            objects[1] + "/" +
+                            objects[0],false,null);
+                    if( response.isSuccessful()){
+                        return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
+                    }
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        try {
+            return asyncTask.execute(query,type).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Structure> getStructureByText(String query) {
+        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
+            @Override
+            protected List<Structure> doInBackground(Object... objects) {
+                try{
+                    Response response=httpClient.requestGet("structure/public/getAllStructuresByTextNotPaginable/" +
+                            objects[0],false,null);
+                    if( response.isSuccessful()){
+                        return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
+                    }
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        try {
+            return asyncTask.execute(query).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<String> getTips(String query) {
+        AsyncTask<String, Void,List<String>> asyncTask=new AsyncTask<String, Void, List<String>>(){
+            @Override
+            protected List<String> doInBackground(String... strings) {
+                try{
+                    Response response=httpClient.requestGet("structure/public/getTips?text=" +
+                            strings[0],false,null);
+                    if( response.isSuccessful()){
+                        return gson.fromJson(response.body().string(),new TypeToken<Collection<String>>() {}.getType());
+                    }
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        try {
+            return asyncTask.execute(query).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

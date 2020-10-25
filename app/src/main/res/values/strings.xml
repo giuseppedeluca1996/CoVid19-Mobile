@@ -30,7 +30,19 @@
     <string name="attractionimg">attractionImg</string>
     <string name="mapimg">mapImg</string>
     <string name="nearmeimg">nearMeImg</string>
-    <string name="textview">TextView</string>
     <string name="research">Research</string>
+    <string name="filter">Filter</string>
+    <string name="order">Order</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="hotel">Hotel</string>
+    <string name="attraction">Attraction</string>
+    <string name="parking">Parking</string>
+    <string name="free_wifi">Free Wi-Fi</string>
+    <string name="pets_allowed">Pets allowed</string>
+    <string name="rating">Rating</string>
+    <string name="structure">Structure</string>
+    <string name="services">Services</string>
+    <string name="budget">Budget</string>
+    <string name="filterButton">Filter</string>
 
 </resources>

@@ -1,13 +1,16 @@
 package com.example.covid19.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-
-public class Structure {
+public class Structure implements Serializable, Parcelable {
 
     @Expose
     private Integer id;
@@ -41,9 +44,54 @@ public class Structure {
     private Date closingHours;
     @Expose
     private Date openingHours;
+    @Expose(deserialize = false , serialize = false)
+    private Double avgRating;
 
     public Structure() {
     }
+
+    protected Structure(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        name = in.readString();
+        address = in.readString();
+        imageLink = in.readString();
+        site = in.readString();
+        email = in.readString();
+        state = in.readString();
+        city = in.readString();
+        phone = in.readString();
+        if (in.readByte() == 0) {
+            priceMin = null;
+        } else {
+            priceMin = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            priceMax = null;
+        } else {
+            priceMax = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            avgRating = null;
+        } else {
+            avgRating = in.readDouble();
+        }
+    }
+
+    public static final Creator<Structure> CREATOR = new Creator<Structure>() {
+        @Override
+        public Structure createFromParcel(Parcel in) {
+            return new Structure(in);
+        }
+
+        @Override
+        public Structure[] newArray(int size) {
+            return new Structure[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -173,6 +221,14 @@ public class Structure {
         this.openingHours = openingHours;
     }
 
+    public Double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(Double avgRating) {
+        this.avgRating = avgRating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -224,5 +280,46 @@ public class Structure {
         result = 31 * result + (closingHours != null ? closingHours.hashCode() : 0);
         result = 31 * result + (openingHours != null ? openingHours.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeString(name);
+        dest.writeString(address);
+        dest.writeString(imageLink);
+        dest.writeString(site);
+        dest.writeString(email);
+        dest.writeString(state);
+        dest.writeString(city);
+        dest.writeString(phone);
+        if (priceMin == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(priceMin);
+        }
+        if (priceMax == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(priceMax);
+        }
+        if (avgRating == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(avgRating);
+        }
     }
 }

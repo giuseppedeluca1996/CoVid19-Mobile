@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
@@ -24,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.covid19.controller.HomePageController;
+import com.example.covid19.model.Type;
 
 public class HomePageFragment extends Fragment implements View.OnClickListener {
 
@@ -36,20 +38,17 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     private Button whereDoYouWantGo;
 
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
     public HomePageFragment() {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static HomePageFragment newInstance(String param1, String param2) {
         HomePageFragment fragment = new HomePageFragment();
         Bundle args = new Bundle();
@@ -71,7 +70,6 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_page, container, false);
     }
     @Override
@@ -82,30 +80,37 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         imageViewMapHomePaqeFragment=view.findViewById(R.id.imageViewMapHomePaqeFragment);
         imageViewMapHomePaqeFragment.setScaleType(ImageView.ScaleType.FIT_XY);
         imageViewMapHomePaqeFragment.setOnClickListener(this);
-         hotelButton=view.findViewById(R.id.imageButtonHotel);
-         attractionButton=view.findViewById(R.id.imageButtonAttraction);
-         restaurantButton=view.findViewById(R.id.imageButtonRestaurant);
-         whereDoYouWantGo=view.findViewById(R.id.whereDoYouWantGoButton);
-         hotelButton.setOnClickListener(this);
-         attractionButton.setOnClickListener(this);
-         restaurantButton.setOnClickListener(this);
-         whereDoYouWantGo.setOnClickListener(this);
+        hotelButton=view.findViewById(R.id.imageButtonHotel);
+        attractionButton=view.findViewById(R.id.imageButtonAttraction);
+        restaurantButton=view.findViewById(R.id.imageButtonRestaurant);
+        whereDoYouWantGo=view.findViewById(R.id.whereDoYouWantGoButton);
+        hotelButton.setOnClickListener(this);
+        attractionButton.setOnClickListener(this);
+        restaurantButton.setOnClickListener(this);
+        whereDoYouWantGo.setOnClickListener(this);
     }
 
 
     public void onClick(View view){
+        final NavController navController =  Navigation.findNavController(view);
         switch (view.getId()){
             case R.id.imageButtonHotel:{
+                HomePageFragmentDirections.ActionHomepageToSearchFragment actionHomepageToSearchFragment = HomePageFragmentDirections.actionHomepageToSearchFragment(Type.HOTEL);
+                navController.navigate(actionHomepageToSearchFragment);
             }break;
             case R.id.imageButtonAttraction:{
+                HomePageFragmentDirections.ActionHomepageToSearchFragment actionHomepageToSearchFragment = HomePageFragmentDirections.actionHomepageToSearchFragment(Type.ATTRACTION);
+                navController.navigate(actionHomepageToSearchFragment);
             }break;
             case R.id.imageButtonRestaurant:{
+                HomePageFragmentDirections.ActionHomepageToSearchFragment actionHomepageToSearchFragment = HomePageFragmentDirections.actionHomepageToSearchFragment(Type.RESTAURANT);
+                navController.navigate(actionHomepageToSearchFragment);
             }break;
             case R.id.imageViewMapHomePaqeFragment:{
                if(HomePageController.showMap()){
-                   if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                           && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                       ActivityCompat.requestPermissions( getActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION},10001 );
+                   if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                           && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                       ActivityCompat.requestPermissions( requireActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION},10001 );
                        return;
                    }
                    Navigation.findNavController(view).navigate(R.id.action_homePage_to_mapsFragment);
@@ -114,6 +119,8 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
                }
             }break;
             case R.id.whereDoYouWantGoButton:{
+                HomePageFragmentDirections.ActionHomepageToSearchFragment actionHomepageToSearchFragment = HomePageFragmentDirections.actionHomepageToSearchFragment(Type.NOT_DEFINE);
+                navController.navigate(actionHomepageToSearchFragment);
             }break;
             default:{
 
@@ -122,7 +129,7 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     }
 
     private  void showGPSDisabledAlertToUser(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(requireContext());
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Enable GPS",
