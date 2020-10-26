@@ -3,26 +3,30 @@ package com.example.covid19.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.ArraySet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Filter implements Serializable, Parcelable {
 
-    private List<Type> types;
+    private Set<Type> types;
     private Double rating;
     private Double priceMin;
     private Double priceMax;
     private List<String> services;
-
+    private Double distance;
 
     public Filter() {
         rating=5D;
         priceMin=0D;
-        priceMax=Double.MAX_VALUE;
+        priceMax=10000D;
         services=new ArrayList<>();
-        types=new ArrayList<>();
+        types=new ArraySet<>();
+        addAllType();
+        distance=50D;
     }
 
     protected Filter(Parcel in) {
@@ -56,11 +60,11 @@ public class Filter implements Serializable, Parcelable {
         }
     };
 
-    public List<Type> getTypes() {
+    public Set<Type> getTypes() {
         return types;
     }
 
-    public void setTypes(List<Type> types) {
+    public void setTypes(Set<Type> types) {
         this.types = types;
     }
 
@@ -75,6 +79,14 @@ public class Filter implements Serializable, Parcelable {
     public  void removeAllType(){
         types.clear();
     }
+
+    public  void addAllType(){
+        types.add(Type.HOTEL);
+        types.add(Type.RESTAURANT);
+        types.add(Type.ATTRACTION);
+    }
+
+
     public Double getRating() {
         return rating;
     }
@@ -106,6 +118,15 @@ public class Filter implements Serializable, Parcelable {
     public void setServices(List<String> services) {
         this.services = services;
     }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
 
     @Override
     public int describeContents() {

@@ -88,8 +88,6 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         manager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
         return inflater.inflate(R.layout.fragment_search, container, false);
-
-
     }
 
     @Override

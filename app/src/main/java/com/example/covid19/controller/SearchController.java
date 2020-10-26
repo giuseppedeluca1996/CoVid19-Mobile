@@ -1,13 +1,22 @@
 package com.example.covid19.controller;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
+import com.example.covid19.FilterFragmentDirections;
 import com.example.covid19.R;
 import com.example.covid19.SearchFragmentDirections;
 import com.example.covid19.StructureListFragmentDirections;
@@ -38,10 +47,10 @@ public class SearchController {
 
 
     private static List<Structure> structures;
-    private static final Filter filter =  new Filter();
-    private static final Order order = new Order();
-
-
+    private static Filter filter =  new Filter();
+    private static Order order = new Order();
+    private static String searchValue;
+    private static LatLng lastPosition;
 
     public static Collection<Structure> getStructureAtDistance(LatLng startPosition, Double distance){
             return structureDao.getStructureAtDistance(BigDecimal.valueOf(startPosition.latitude),BigDecimal.valueOf(startPosition.longitude),BigDecimal.valueOf(distance));
@@ -56,7 +65,11 @@ public class SearchController {
     }
 
     public static void  getStructureAroundYou(LatLng latLng, Type type) {
-        structures = structureDao.getStructureAroundYou(BigDecimal.valueOf(latLng.latitude),BigDecimal.valueOf(latLng.longitude),type);
+        filter.removeAllType();
+        filter.addType(type);
+        searchValue="";
+        lastPosition=latLng;
+        structures = structureDao.getStructureAroundYou(BigDecimal.valueOf(latLng.latitude),BigDecimal.valueOf(latLng.longitude),filter,order);
         AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
             @Override
             protected Void doInBackground(List<Structure>... lists) {
@@ -70,12 +83,17 @@ public class SearchController {
             asyncTask.execute(structures).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        }        filter.addType(type);
+        }
+
         SearchFragmentDirections.ActionSearchFragmentToStructureList searchFragmentDirections =  SearchFragmentDirections.actionSearchFragmentToStructureList(Arrays.copyOf(structures.toArray(), structures.size(), Structure[].class));
         navController.navigate(searchFragmentDirections);
     }
+
     public static void  getStructureAroundYou(LatLng latLng) {
-        structures = structureDao.getStructureAroundYou(BigDecimal.valueOf(latLng.latitude),BigDecimal.valueOf(latLng.longitude));
+        filter.addAllType();
+        searchValue="";
+        lastPosition=latLng;
+        structures = structureDao.getStructureAroundYou(BigDecimal.valueOf(latLng.latitude),BigDecimal.valueOf(latLng.longitude),filter,order);
         AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
             @Override
             protected Void doInBackground(List<Structure>... lists) {
@@ -89,13 +107,17 @@ public class SearchController {
             asyncTask.execute(structures).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        }        filter.removeAllType();
+        }
+
         SearchFragmentDirections.ActionSearchFragmentToStructureList searchFragmentDirections =  SearchFragmentDirections.actionSearchFragmentToStructureList(Arrays.copyOf(structures.toArray(), structures.size(), Structure[].class));
         navController.navigate(searchFragmentDirections);
     }
 
     public static void getStructureByText(String query, Type type) {
-        structures =  structureDao.getStructureByText(query, type);
+        filter.removeAllType();
+        filter.addType(type);
+        searchValue=query;
+        structures =  structureDao.getStructureByText(query, filter,order);
         AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
             @Override
             protected Void doInBackground(List<Structure>... lists) {
@@ -110,13 +132,15 @@ public class SearchController {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        filter.addType(type);
+
         SearchFragmentDirections.ActionSearchFragmentToStructureList searchFragmentDirections =  SearchFragmentDirections.actionSearchFragmentToStructureList(Arrays.copyOf(structures.toArray(), structures.size(), Structure[].class));
         navController.navigate(searchFragmentDirections);
     }
 
     public static void getStructureByText(String query) {
-        structures = structureDao.getStructureByText(query);
+        filter.addAllType();
+        searchValue=query;
+        structures = structureDao.getStructureByText(query,filter,order);
         AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
             @Override
             protected Void doInBackground(List<Structure>... lists) {
@@ -131,15 +155,14 @@ public class SearchController {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        filter.removeAllType();
         SearchFragmentDirections.ActionSearchFragmentToStructureList searchFragmentDirections =  SearchFragmentDirections.actionSearchFragmentToStructureList(Arrays.copyOf(structures.toArray(), structures.size(), Structure[].class));
         navController.navigate(searchFragmentDirections);
     }
 
+
     public static List<String> getTips(String query) {
         return structureDao.getTips(query);
     }
-
 
     public static void showFilter(){
         StructureListFragmentDirections.ActionStructureListToFilterFragment actionStructureListToFilterFragment = StructureListFragmentDirections.actionStructureListToFilterFragment(filter);
@@ -148,5 +171,46 @@ public class SearchController {
 
     public static void showOrder(){
 
+    }
+
+    public static void refreshFilter(final Filter filter) {
+       SearchController.filter=filter;
+       if(searchValue.isEmpty()){
+          structures=structureDao.getStructureAroundYou(BigDecimal.valueOf(lastPosition.latitude),BigDecimal.valueOf(lastPosition.longitude),filter,order);
+           AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
+               @Override
+               protected Void doInBackground(List<Structure>... lists) {
+                   for(Structure s : lists[0]){
+                       s.setAvgRating(reviewDao.getAvgRating(s.getId()));
+                   }
+                   return null;
+               }
+           };
+           try {
+               asyncTask.execute(structures).get();
+           } catch (ExecutionException | InterruptedException e) {
+               e.printStackTrace();
+           }
+       }else {
+           structures=structureDao.getStructureByText(searchValue, filter,order);
+           AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
+               @Override
+               protected Void doInBackground(List<Structure>... lists) {
+                   synchronized (lists[0]){
+                       for(Structure s : lists[0]){
+                           s.setAvgRating(reviewDao.getAvgRating(s.getId()));
+                       }
+                   }
+                   return null;
+               }
+           };
+           try {
+               asyncTask.execute(structures).get();
+           } catch (ExecutionException | InterruptedException e) {
+               e.printStackTrace();
+           }
+       }
+        FilterFragmentDirections.ActionFilterFragmentToStructureList filterFragmentToStructureList =  FilterFragmentDirections.actionFilterFragmentToStructureList(Arrays.copyOf(structures.toArray(), structures.size(), Structure[].class));
+        navController.navigate(filterFragmentToStructureList);
     }
 }

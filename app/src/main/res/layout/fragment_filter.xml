@@ -168,7 +168,7 @@
           android:layout_width="398dp"
           android:layout_height="25dp"
           android:layout_marginTop="2dp"
-          app:count="1000"
+          app:count="2000"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/budgetValue"

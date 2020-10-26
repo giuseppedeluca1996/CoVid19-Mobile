@@ -10,69 +10,50 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.covid19.controller.SearchController;
+import com.example.covid19.model.Filter;
+import com.example.covid19.model.Type;
 
 import org.jetbrains.annotations.NotNull;
 
 import me.bendik.simplerangeview.SimpleRangeView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FilterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class FilterFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private  SimpleRangeView budgetBar;
+    private RatingBar starRating;
+    private Button clickFilter;
+    private TextView value;
+    private Filter filter;
+    private CheckBox hotelCheckBox;
+    private CheckBox restaurantCheckBox;
+    private CheckBox attractionCheckBox;
 
-    public FilterFragment() {
-        // Required empty public constructor
-    }
 
-    SimpleRangeView budgetBar;
-    RatingBar starRating;
-    Button clickFilter;
-    TextView value;
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment filterFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FilterFragment newInstance(String param1, String param2) {
-        FilterFragment fragment = new FilterFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static FilterFragment newInstance() {
+        return new FilterFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        if(getArguments() != null){
+            FilterFragmentArgs args = FilterFragmentArgs.fromBundle(getArguments());
+            filter=args.getFilter();
+        }
         return inflater.inflate(R.layout.fragment_filter, container, false);
     }
 
@@ -80,12 +61,14 @@ public class FilterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         starRating = view.findViewById(R.id.ratingBar);
         clickFilter = view.findViewById(R.id.clickFilter);
         budgetBar = view.findViewById(R.id.budgetBar);
         value = view.findViewById(R.id.budgetValue);
+        hotelCheckBox = view.findViewById(R.id.hotelcheckBox);
+        attractionCheckBox = view.findViewById(R.id.attractionCheckBox);
+        restaurantCheckBox = view.findViewById(R.id.restaurantCheckBox);
+
 
 
 
@@ -93,18 +76,28 @@ public class FilterFragment extends Fragment {
         clickFilter.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Star:" + starRating.getRating(), Toast.LENGTH_SHORT).show();
+                filter.setPriceMin((double)budgetBar.getStart());
+                filter.setPriceMax((double)budgetBar.getEnd());
+                filter.removeAllType();
+                if( hotelCheckBox.isChecked()){
+                    filter.addType(Type.HOTEL);
+                }
+                if( attractionCheckBox.isChecked()){
+                    filter.addType(Type.ATTRACTION);
+                }
+                if( restaurantCheckBox.isChecked()){
+                    filter.addType(Type.RESTAURANT);
+                }
+                filter.setRating((double)starRating.getRating());
+                SearchController.refreshFilter(filter);
             }
         });
-
-
-
 
 
         budgetBar.setOnChangeRangeListener(new SimpleRangeView.OnChangeRangeListener() {
             @Override
             public void onRangeChanged(@NotNull SimpleRangeView simpleRangeView, int i, int i1) {
-                value.setText(String.valueOf(i)+"€ - "+String.valueOf(i1)+"€");
+                value.setText(budgetBar.getStart() + "€ - " + budgetBar.getEnd() + "€");
 
             }
         });
@@ -112,12 +105,12 @@ public class FilterFragment extends Fragment {
         budgetBar.setOnTrackRangeListener(new SimpleRangeView.OnTrackRangeListener() {
             @Override
             public void onStartRangeChanged(@NotNull SimpleRangeView simpleRangeView, int i) {
-                value.setText(String.valueOf(i)+"€");
+                value.setText(i+"€");
             }
 
             @Override
             public void onEndRangeChanged(@NotNull SimpleRangeView simpleRangeView, int i) {
-                value.setText(String.valueOf(i)+"€");
+                value.setText(i+"€");
 
             }
         });
@@ -131,6 +124,19 @@ public class FilterFragment extends Fragment {
         });
 
 
+        if(filter.getTypes().contains(Type.HOTEL)){
+            hotelCheckBox.setChecked(true);
+        }
+        if(filter.getTypes().contains(Type.ATTRACTION)){
+            attractionCheckBox.setChecked(true);
+        }
+        if(filter.getTypes().contains(Type.RESTAURANT)){
+            restaurantCheckBox.setChecked(true);
+        }
+        starRating.setRating(filter.getRating().floatValue());
+        budgetBar.setStart(filter.getPriceMin().intValue());
+        budgetBar.setEnd(filter.getPriceMax().intValue());
+        value.setText(budgetBar.getStart() + "€ - " + budgetBar.getEnd() + "€");
     }
 
 

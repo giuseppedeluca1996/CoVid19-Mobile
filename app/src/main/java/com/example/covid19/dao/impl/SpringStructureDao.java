@@ -5,12 +5,19 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.covid19.dao.StructureDao;
+import com.example.covid19.model.Filter;
 import com.example.covid19.model.HttpClient;
+import com.example.covid19.model.Order;
 import com.example.covid19.model.Structure;
 import com.example.covid19.model.Type;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -132,43 +139,31 @@ public class SpringStructureDao extends StructureDao {
         return null;
     }
 
-    @Override
-    public List<Structure> getStructureAroundYou(BigDecimal latitude, BigDecimal longitude, Type type) {
-        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
-            @Override
-            protected List<Structure> doInBackground(Object... objects) {
-                try{
-                    Response response=httpClient.requestGet("structure/public/getStructureAroundYou?latitude=" +
-                            objects[0] + "&longitude=" +
-                            objects[1] + "&type=" +
-                            objects[2].toString(),false,null);
-                    if( response.isSuccessful()){
-                        return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
-                    }
-                }catch (IOException ioException){
-                    ioException.printStackTrace();
-                }
-                return null;
-            }
-        };
 
+
+    @Override
+    public List<Structure> getStructureAroundYou(final BigDecimal latitude, final BigDecimal longitude, Filter filter, Order order) {
+        final JSONObject jsonObject = new JSONObject();
         try {
-            return asyncTask.execute(latitude,longitude,type).get();
-        } catch (ExecutionException | InterruptedException e) {
+            jsonObject.put("latitude",latitude);
+            jsonObject.put("longitude",longitude);
+            jsonObject.put("priceMin",filter.getPriceMin().doubleValue());
+            jsonObject.put("priceMax",filter.getPriceMax().doubleValue());
+            jsonObject.put("rating",filter.getRating().doubleValue());
+            JSONArray jsonArray=new JSONArray();
+            for(Type t: filter.getTypes())
+                jsonArray.put(t);
+            jsonObject.put("types",jsonArray);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
-    }
 
-    @Override
-    public List<Structure> getStructureAroundYou(BigDecimal latitude, BigDecimal longitude) {
-        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
+        AsyncTask<JSONObject, Void,List<Structure>> asyncTask=new AsyncTask<JSONObject, Void, List<Structure>>(){
             @Override
-            protected List<Structure> doInBackground(Object... objects) {
+            protected List<Structure> doInBackground(JSONObject... objects) {
+                String s= jsonObject.toString();
                 try{
-                    Response response=httpClient.requestGet("structure/public/getStructureAroundYou?latitude=" +
-                            objects[0] + "&longitude=" +
-                            objects[1],false,null);
+                    Response response=httpClient.requestPost("structure/public/getStructureAroundYou", jsonObject.toString(), false,null);
                     if( response.isSuccessful()){
                         return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
                     }
@@ -177,10 +172,12 @@ public class SpringStructureDao extends StructureDao {
                 }
                 return null;
             }
+
+
         };
 
         try {
-            return asyncTask.execute(latitude,longitude).get();
+            return asyncTask.execute(jsonObject).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -189,40 +186,27 @@ public class SpringStructureDao extends StructureDao {
 
 
     @Override
-    public List<Structure> getStructureByText(String query, Type type) {
-        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
-            @Override
-            protected List<Structure> doInBackground(Object... objects) {
-                try{
-                    Response response=httpClient.requestGet("structure/public/getAllStructuresByTextNotPaginable/" +
-                            objects[1] + "/" +
-                            objects[0],false,null);
-                    if( response.isSuccessful()){
-                        return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
-                    }
-                }catch (IOException ioException){
-                    ioException.printStackTrace();
-                }
-                return null;
-            }
-        };
-
+    public List<Structure> getStructureByText(String query,  Filter filter, Order order) {
+        final JSONObject jsonObject = new JSONObject();
         try {
-            return asyncTask.execute(query,type).get();
-        } catch (ExecutionException | InterruptedException e) {
+            jsonObject.put("priceMin",filter.getPriceMin().doubleValue());
+            jsonObject.put("priceMax",filter.getPriceMax().doubleValue());
+            jsonObject.put("rating",filter.getRating().doubleValue());
+            jsonObject.put("searchValue",query);
+            JSONArray jsonArray=new JSONArray();
+            for(Type t: filter.getTypes())
+                jsonArray.put(t);
+            jsonObject.put("types",jsonArray);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
-    }
 
-    @Override
-    public List<Structure> getStructureByText(String query) {
-        AsyncTask<Object, Void,List<Structure>> asyncTask=new AsyncTask<Object, Void, List<Structure>>(){
+        AsyncTask<JSONObject, Void,List<Structure>> asyncTask=new AsyncTask<JSONObject, Void, List<Structure>>(){
             @Override
-            protected List<Structure> doInBackground(Object... objects) {
+            protected List<Structure> doInBackground(JSONObject... objects) {
+                String s= jsonObject.toString();
                 try{
-                    Response response=httpClient.requestGet("structure/public/getAllStructuresByTextNotPaginable/" +
-                            objects[0],false,null);
+                    Response response=httpClient.requestPost("structure/public/getStructureByText", jsonObject.toString(), false,null);
                     if( response.isSuccessful()){
                         return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
                     }
@@ -231,10 +215,12 @@ public class SpringStructureDao extends StructureDao {
                 }
                 return null;
             }
+
+
         };
 
         try {
-            return asyncTask.execute(query).get();
+            return asyncTask.execute(jsonObject).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -267,4 +253,6 @@ public class SpringStructureDao extends StructureDao {
         }
         return null;
     }
+
+
 }
