@@ -1,22 +1,16 @@
 package com.example.covid19.controller;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import android.os.AsyncTask;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
 import com.example.covid19.FilterFragmentDirections;
+import com.example.covid19.OrderFragmentDirections;
 import com.example.covid19.R;
 import com.example.covid19.SearchFragmentDirections;
 import com.example.covid19.StructureListFragmentDirections;
@@ -32,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -43,8 +38,6 @@ public class SearchController {
     private static ReviewDao reviewDao;
     private static Context context;
     private static NavController navController;
-
-
 
     private static List<Structure> structures;
     private static Filter filter =  new Filter();
@@ -159,7 +152,6 @@ public class SearchController {
         navController.navigate(searchFragmentDirections);
     }
 
-
     public static List<String> getTips(String query) {
         return structureDao.getTips(query);
     }
@@ -170,7 +162,8 @@ public class SearchController {
     }
 
     public static void showOrder(){
-
+        StructureListFragmentDirections.ActionStructureListToOrderFragment actionStructureListToOrderFragment = StructureListFragmentDirections.actionStructureListToOrderFragment(order);
+        navController.navigate(actionStructureListToOrderFragment);
     }
 
     public static void refreshFilter(final Filter filter) {
@@ -212,5 +205,89 @@ public class SearchController {
        }
         FilterFragmentDirections.ActionFilterFragmentToStructureList filterFragmentToStructureList =  FilterFragmentDirections.actionFilterFragmentToStructureList(Arrays.copyOf(structures.toArray(), structures.size(), Structure[].class));
         navController.navigate(filterFragmentToStructureList);
+    }
+
+
+
+
+    public static void refreshOrder(final Order order) {
+        SearchController.order=order;
+        if(searchValue.isEmpty()){
+            structures=structureDao.getStructureAroundYou(BigDecimal.valueOf(lastPosition.latitude),BigDecimal.valueOf(lastPosition.longitude),filter,order);
+            AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
+                @Override
+                protected Void doInBackground(List<Structure>... lists) {
+                    for(Structure s : lists[0]){
+                        s.setAvgRating(reviewDao.getAvgRating(s.getId()));
+                    }
+                    return null;
+                }
+            };
+            try {
+                asyncTask.execute(structures).get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else {
+            structures=structureDao.getStructureByText(searchValue, filter,order);
+            AsyncTask<List<Structure>, Void,Void> asyncTask=new AsyncTask<List<Structure>, Void, Void>(){
+                @Override
+                protected Void doInBackground(List<Structure>... lists) {
+                    synchronized (lists[0]){
+                        for(Structure s : lists[0]){
+                            s.setAvgRating(reviewDao.getAvgRating(s.getId()));
+                        }
+                    }
+                    return null;
+                }
+            };
+            try {
+                asyncTask.execute(structures).get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        switch (order.getSortingCriteria()){
+            case HIGHER_RATING:{
+                structures.sort(new Comparator<Structure>() {
+                    @Override
+                    public int compare(Structure o1, Structure o2) {
+
+                        if(o1.getAvgRating()<o2.getAvgRating()){
+                            return 1;
+                        } if(o1.getAvgRating()>o2.getAvgRating()) {
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });
+            }break;
+            case SMALLEST_DISTANCE:{
+
+            }break;
+            case GRATER_DISTANCE:{
+
+            }break;
+            case MINOR_RATING:{
+                structures.sort(new Comparator<Structure>() {
+                    @Override
+                    public int compare(Structure o1, Structure o2) {
+
+                        if(o1.getAvgRating()<o2.getAvgRating()){
+                            return -1;
+                        } if(o1.getAvgRating()>o2.getAvgRating()) {
+                            return 1;
+                        }
+                        return 0;
+                    }
+                });
+            }break;
+            default:{
+
+            }
+        }
+
+        OrderFragmentDirections.ActionOrderFragmentToStructureList orderFragmentToStructureList =  OrderFragmentDirections.actionOrderFragmentToStructureList(Arrays.copyOf(structures.toArray(), structures.size(), Structure[].class));
+        navController.navigate(orderFragmentToStructureList);
     }
 }

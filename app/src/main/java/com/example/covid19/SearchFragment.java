@@ -43,8 +43,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class SearchFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
 
     List<String> values = new ArrayList<>();
@@ -54,8 +52,6 @@ public class SearchFragment extends Fragment {
     private ImageButton backButton;
     private ImageView aroundYouImg;
     private ListView listView;
-    private String mParam1;
-    private String mParam2;
     private long lastSearchTime = 0;
     private  LocationManager manager;
     private Type type;
@@ -66,21 +62,12 @@ public class SearchFragment extends Fragment {
 
     public static SearchFragment newInstance(String param1, String param2) {
         SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
     }
 
     @Override
@@ -116,7 +103,6 @@ public class SearchFragment extends Fragment {
             aroundYouButton.setClickable(false);
         }
 
-
         view.findViewById(R.id.searchFragmentParent).setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -147,6 +133,8 @@ public class SearchFragment extends Fragment {
                     SearchController.getStructureByText(searchView.getQuery().toString());
                 else
                     SearchController.getStructureByText(searchView.getQuery().toString(),type);
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(requireActivity().getCurrentFocus().getWindowToken(), 0);
             }
         });
 
@@ -208,13 +196,13 @@ public class SearchFragment extends Fragment {
                     return;
                 } else {
                     if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         Location locationGPS = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        LatLng latLng = new LatLng(locationGPS.getLatitude(),locationGPS.getLongitude());
-                       if(type!= Type.NOT_DEFINE)
-                           SearchController.getStructureAroundYou(latLng,type);
-                       else
-                           SearchController.getStructureAroundYou(latLng);
+                        LatLng latLng = new LatLng(locationGPS.getLatitude(), locationGPS.getLongitude());
+                        if (type != Type.NOT_DEFINE)
+                            SearchController.getStructureAroundYou(latLng, type);
+                        else
+                            SearchController.getStructureAroundYou(latLng);
                     }
                 }
             }

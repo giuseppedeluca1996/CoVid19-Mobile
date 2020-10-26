@@ -44,5 +44,11 @@
     <string name="services">Services</string>
     <string name="budget">Budget</string>
     <string name="filterButton">Filter</string>
+    <string name="orderButton">Order</string>
+    <string name="textViewSort">Sorting Criteria</string>
+    <string name="higher_rating">Higher rating</string>
+    <string name="minor_rating">Minor rating</string>
+    <string name="greater_distance">"Greater Distance "</string>
+    <string name="smallest_distance">Smallest distance</string>
 
 </resources>

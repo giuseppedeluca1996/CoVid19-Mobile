@@ -119,6 +119,15 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
                }
             }break;
             case R.id.whereDoYouWantGoButton:{
+                if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions( requireActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION},10001);
+                    try {
+                        Thread.sleep(2500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 HomePageFragmentDirections.ActionHomepageToSearchFragment actionHomepageToSearchFragment = HomePageFragmentDirections.actionHomepageToSearchFragment(Type.NOT_DEFINE);
                 navController.navigate(actionHomepageToSearchFragment);
             }break;
