@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_structureList_to_orderFragment"
             app:destination="@id/orderFragment" />
+        <action
+            android:id="@+id/action_structureList_to_specificStructureFragment"
+            app:destination="@id/specificStructureFragment" />
     </fragment>
     <fragment
         android:id="@+id/filterFragment"
@@ -80,5 +83,17 @@
         <action
             android:id="@+id/action_orderFragment_to_structureList"
             app:destination="@id/structureList" />
+    </fragment>
+    <fragment
+        android:id="@+id/specificStructureFragment"
+        android:name="com.example.covid19.SpecificStructureFragment"
+        android:label="SpecificStructureFragment"
+        tools:layout="@layout/fragment_specific_structure" >
+        <argument
+            android:name="structure"
+            app:argType="com.example.covid19.model.Structure" />
+        <argument
+            android:name="reviews"
+            app:argType="com.example.covid19.model.Review[]" />
     </fragment>
 </navigation>

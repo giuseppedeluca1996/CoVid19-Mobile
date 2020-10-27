@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,24 +26,12 @@ import java.util.List;
 
 
     private RecyclerView structureRecycleView;
-    Button filterButton;
-    Button orderButton;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
-
+    private Button filterButton;
+    private Button orderButton;
 
     private Structure[] structures;
 
-    private List<String>structures_name;
-    private List<String>structures_address;
-    private List<Double>structures_rating;
-    private List<String>structures_image;
-
-     public StructureListFragment() {
+    public StructureListFragment() {
         // Required empty public constructor
     }
 
@@ -50,27 +39,17 @@ import java.util.List;
     public static StructureListFragment newInstance(String param1, String param2) {
         StructureListFragment fragment = new StructureListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         if(getArguments() != null){
             StructureListFragmentArgs args = StructureListFragmentArgs.fromBundle(getArguments());
             structures=args.getStructures();
         }
-
-
-
 
     }
 
@@ -98,9 +77,9 @@ import java.util.List;
                  SearchController.showOrder();
              }
          });
-        structureRecycleView=view.findViewById(R.id.structureListRecycleView);
-        StructureListAdapter structureListAdapter= new StructureListAdapter(requireContext(), structures);
-        structureRecycleView.setAdapter(structureListAdapter);
-        structureRecycleView.setLayoutManager(new LinearLayoutManager(requireContext()));
+         structureRecycleView=view.findViewById(R.id.structureListRecycleView);
+         StructureListAdapter structureListAdapter= new StructureListAdapter(requireContext(), structures);
+         structureRecycleView.setAdapter(structureListAdapter);
+         structureRecycleView.setLayoutManager(new LinearLayoutManager(requireContext()));
      }
  }

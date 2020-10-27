@@ -1,5 +1,6 @@
 package com.example.covid19.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,13 +15,19 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.covid19.R;
+import com.example.covid19.StructureListFragmentDirections;
+import com.example.covid19.controller.SearchController;
+import com.example.covid19.controller.StructureViewController;
 
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 
 
 public class StructureListAdapter extends RecyclerView.Adapter<StructureListAdapter.MyViewHolder> {
@@ -43,7 +50,7 @@ public class StructureListAdapter extends RecyclerView.Adapter<StructureListAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
             holder.nameStructure.setText(structures[position].getName());
             holder.addressStructure.setText(structures[position].getAddress());
             holder.ratingStructure.setRating(structures[position].getAvgRating().floatValue());
@@ -70,8 +77,16 @@ public class StructureListAdapter extends RecyclerView.Adapter<StructureListAdap
                     return  BitmapFactory.decodeStream(new URL(url).openConnection().getInputStream());
                 }
             }
-
             new DownloadImagesTask().execute(holder.imageStructure);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  NavController navController =  Navigation.findNavController((Activity) context, R.id.fragment);
+                  StructureListFragmentDirections.ActionStructureListToSpecificStructureFragment actionStructureListToSpecificStructureFragment=StructureListFragmentDirections.actionStructureListToSpecificStructureFragment(structures[position], StructureViewController.getReviews(structures[position].getId()));
+                  navController.navigate(actionStructureListToSpecificStructureFragment);
+                }
+            });
     }
 
     @Override
@@ -94,5 +109,7 @@ public class StructureListAdapter extends RecyclerView.Adapter<StructureListAdap
             imageStructure=itemView.findViewById(R.id.image_list_structure);
 
         }
+
+
     }
 }

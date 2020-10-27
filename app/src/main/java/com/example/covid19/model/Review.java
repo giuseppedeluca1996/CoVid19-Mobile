@@ -1,19 +1,59 @@
 package com.example.covid19.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Date;
 
 
-public class Review {
+public class Review implements Serializable, Parcelable {
     private Short rating;
     private String description;
     private Date date;
     private Short qualityPrice;
     private Short cleaning;
     private Short service;
+    private User idUser;
 
-    public Review() {
+    protected Review(Parcel in) {
+        int tmpRating = in.readInt();
+        rating = tmpRating != Integer.MAX_VALUE ? (short) tmpRating : null;
+        description = in.readString();
+        int tmpQualityPrice = in.readInt();
+        qualityPrice = tmpQualityPrice != Integer.MAX_VALUE ? (short) tmpQualityPrice : null;
+        int tmpCleaning = in.readInt();
+        cleaning = tmpCleaning != Integer.MAX_VALUE ? (short) tmpCleaning : null;
+        int tmpService = in.readInt();
+        service = tmpService != Integer.MAX_VALUE ? (short) tmpService : null;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(rating != null ? (int) rating : Integer.MAX_VALUE);
+        dest.writeString(description);
+        dest.writeInt(qualityPrice != null ? (int) qualityPrice : Integer.MAX_VALUE);
+        dest.writeInt(cleaning != null ? (int) cleaning : Integer.MAX_VALUE);
+        dest.writeInt(service != null ? (int) service : Integer.MAX_VALUE);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Review> CREATOR = new Creator<Review>() {
+        @Override
+        public Review createFromParcel(Parcel in) {
+            return new Review(in);
+        }
+
+        @Override
+        public Review[] newArray(int size) {
+            return new Review[size];
+        }
+    };
 
     public Short getRating() {
         return rating;
@@ -63,32 +103,12 @@ public class Review {
         this.service = service;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Review review = (Review) o;
-
-        if (rating != null ? !rating.equals(review.rating) : review.rating != null) return false;
-        if (description != null ? !description.equals(review.description) : review.description != null)
-            return false;
-        if (date != null ? !date.equals(review.date) : review.date != null) return false;
-        if (qualityPrice != null ? !qualityPrice.equals(review.qualityPrice) : review.qualityPrice != null)
-            return false;
-        if (cleaning != null ? !cleaning.equals(review.cleaning) : review.cleaning != null)
-            return false;
-        return service != null ? service.equals(review.service) : review.service == null;
+    public User getIdUser() {
+        return idUser;
     }
 
-    @Override
-    public int hashCode() {
-        int result = rating != null ? rating.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (qualityPrice != null ? qualityPrice.hashCode() : 0);
-        result = 31 * result + (cleaning != null ? cleaning.hashCode() : 0);
-        result = 31 * result + (service != null ? service.hashCode() : 0);
-        return result;
+    public void setIdUser(User idUser) {
+        this.idUser = idUser;
     }
+
 }

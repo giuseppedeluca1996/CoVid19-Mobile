@@ -12,9 +12,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.Response;
 
@@ -25,7 +28,7 @@ public class SpringReviewDao extends ReviewDao {
     private Gson gson;
 
     private SpringReviewDao(Context context){
-        gson = new GsonBuilder().setDateFormat("HH:mm:ss").create();
+        gson = new Gson();
         httpClient=new HttpClient(context);
     }
 
@@ -74,4 +77,30 @@ public class SpringReviewDao extends ReviewDao {
         }
         return null;
     }
+
+    @Override
+    public   List<Review> getAllByIdStructure(Integer idStructure){
+        AsyncTask<Integer, Void,List<Review>> asyncTask=new AsyncTask<Integer, Void, List<Review>>(){
+            @Override
+            protected List<Review> doInBackground(Integer... objects) {
+                try{
+                    Response response=httpClient.requestGet("review/public/getAllReviewOfStructure?idStructure="+objects[0], false,null);
+                    if( response.isSuccessful()){
+                        return gson.fromJson(response.body().string(),new TypeToken<List<Review>>() {}.getType());
+                    }
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        try {
+            return asyncTask.execute(idStructure).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
