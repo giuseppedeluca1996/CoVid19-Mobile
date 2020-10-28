@@ -9,33 +9,71 @@ import java.util.Date;
 
 
 public class Review implements Serializable, Parcelable {
-    private Short rating;
+    private Double rating;
     private String description;
     private Date date;
-    private Short qualityPrice;
-    private Short cleaning;
-    private Short service;
+    private Double qualityPrice;
+    private Double cleaning;
+    private Double service;
     private User idUser;
+    private Integer exte_id;
+
+    public Review(){
+
+    }
+
 
     protected Review(Parcel in) {
-        int tmpRating = in.readInt();
-        rating = tmpRating != Integer.MAX_VALUE ? (short) tmpRating : null;
+        if (in.readByte() == 0) {
+            rating = null;
+        } else {
+            rating = in.readDouble();
+        }
         description = in.readString();
-        int tmpQualityPrice = in.readInt();
-        qualityPrice = tmpQualityPrice != Integer.MAX_VALUE ? (short) tmpQualityPrice : null;
-        int tmpCleaning = in.readInt();
-        cleaning = tmpCleaning != Integer.MAX_VALUE ? (short) tmpCleaning : null;
-        int tmpService = in.readInt();
-        service = tmpService != Integer.MAX_VALUE ? (short) tmpService : null;
+        if (in.readByte() == 0) {
+            qualityPrice = null;
+        } else {
+            qualityPrice = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            cleaning = null;
+        } else {
+            cleaning = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            service = null;
+        } else {
+            service = in.readDouble();
+        }
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(rating != null ? (int) rating : Integer.MAX_VALUE);
+        if (rating == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(rating);
+        }
         dest.writeString(description);
-        dest.writeInt(qualityPrice != null ? (int) qualityPrice : Integer.MAX_VALUE);
-        dest.writeInt(cleaning != null ? (int) cleaning : Integer.MAX_VALUE);
-        dest.writeInt(service != null ? (int) service : Integer.MAX_VALUE);
+        if (qualityPrice == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(qualityPrice);
+        }
+        if (cleaning == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(cleaning);
+        }
+        if (service == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(service);
+        }
     }
 
     @Override
@@ -55,11 +93,11 @@ public class Review implements Serializable, Parcelable {
         }
     };
 
-    public Short getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Short rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -79,27 +117,27 @@ public class Review implements Serializable, Parcelable {
         this.date = date;
     }
 
-    public Short getQualityPrice() {
+    public Double getQualityPrice() {
         return qualityPrice;
     }
 
-    public void setQualityPrice(Short qualityPrice) {
+    public void setQualityPrice(Double qualityPrice) {
         this.qualityPrice = qualityPrice;
     }
 
-    public Short getCleaning() {
+    public Double getCleaning() {
         return cleaning;
     }
 
-    public void setCleaning(Short cleaning) {
+    public void setCleaning(Double cleaning) {
         this.cleaning = cleaning;
     }
 
-    public Short getService() {
+    public Double getService() {
         return service;
     }
 
-    public void setService(Short service) {
+    public void setService(Double service) {
         this.service = service;
     }
 
@@ -111,4 +149,11 @@ public class Review implements Serializable, Parcelable {
         this.idUser = idUser;
     }
 
+    public Integer getExte_id() {
+        return exte_id;
+    }
+
+    public void setExte_id(Integer exte_id) {
+        this.exte_id = exte_id;
+    }
 }

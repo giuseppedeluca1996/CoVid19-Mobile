@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.covid19.controller.SearchController;
 import com.example.covid19.model.Structure;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class MapsFragment extends Fragment {
@@ -37,8 +39,10 @@ public class MapsFragment extends Fragment {
     private static final Double DISTANCE_DEFAULT = 50D;
     private Button researchButton;
     private ImageButton closeButton;
+    private ImageView researchImage;
 
     private Collection<Structure> structures;
+    private Structure structure;
     private LatLng lastLocation;
 
     private LocationManager locationManager;
@@ -57,8 +61,16 @@ public class MapsFragment extends Fragment {
                 googleMap.setMyLocationEnabled(true);
                 map=googleMap;
             }
-            if(structures !=null)
+            if(structures !=null) {
                 populateMap(googleMap);
+                researchButton.setVisibility(View.VISIBLE);
+                researchImage.setVisibility(View.VISIBLE);
+            }else if(structure != null) {
+                populateMap_2(googleMap);
+                researchButton.setVisibility(View.INVISIBLE);
+                researchImage.setVisibility(View.INVISIBLE);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(structure.getLatitude().doubleValue(),structure.getLongitude().doubleValue()),18.0f));
+            }
         }
     };
 
@@ -83,7 +95,8 @@ public class MapsFragment extends Fragment {
             lastLocation=new LatLng(location.getLatitude(),location.getLongitude());
 
         }
-        structures= SearchController.getStructureAtDistance(lastLocation,DISTANCE_DEFAULT);
+        if(structure==null)
+            structures= SearchController.getStructureAtDistance(lastLocation,DISTANCE_DEFAULT);
         return inflater.inflate(R.layout.fragment_maps, container, false);
 
     }
@@ -111,12 +124,12 @@ public class MapsFragment extends Fragment {
             public void onClick(View v) {
                 map.clear();
                 Double distance = getFocusDistance();
-               if ( (structures= SearchController.getStructureAtDistance(map.getCameraPosition().target, distance)) != null)
+                if ( (structures= SearchController.getStructureAtDistance(map.getCameraPosition().target, distance)) != null)
                     populateMap(map);
 
             }
         });
-
+        researchImage=view.findViewById(R.id.imageView3);
     }
 
     private void populateMap(GoogleMap googleMap){
@@ -141,6 +154,26 @@ public class MapsFragment extends Fragment {
             }
         }
     }
+    private void populateMap_2(GoogleMap googleMap){
+        synchronized (structure){
+            float color;
+            switch(structure.getType()){
+                case HOTEL:  color=BitmapDescriptorFactory.HUE_AZURE;
+                    break;
+                case ATTRACTION: color=BitmapDescriptorFactory.HUE_ORANGE;
+                    break;
+                case  RESTAURANT: color=BitmapDescriptorFactory.HUE_YELLOW;
+                    break;
+                default:
+                    color=BitmapDescriptorFactory.HUE_RED;
+            }
+            googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(structure.getLatitude().doubleValue(),structure.getLongitude().doubleValue()))
+                    .title(structure.getName())
+                    .icon(BitmapDescriptorFactory.defaultMarker(color)
+                    ));
+        }
+    }
 
     private double getFocusDistance(){
             VisibleRegion visibleRegion = map.getProjection().getVisibleRegion();
@@ -152,4 +185,26 @@ public class MapsFragment extends Fragment {
             Location.distanceBetween( (farLeft.latitude + nearLeft.latitude) / 2, farLeft.longitude, (farRight.latitude + nearRight.latitude) / 2, farRight.longitude, distanceWidth);
             return distanceWidth[0]/2/1000;
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() !=null){
+            MapsFragmentArgs mapsFragmentArgs = MapsFragmentArgs.fromBundle(getArguments());
+            if(mapsFragmentArgs.getStructure() != null)
+               structure=mapsFragmentArgs.getStructure();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        structures=null;
+        structure=null;
+        map.clear();
+    }
+
+
+
+
 }

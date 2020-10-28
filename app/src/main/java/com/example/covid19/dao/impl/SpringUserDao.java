@@ -37,14 +37,17 @@ public class SpringUserDao extends UserDao {
     }
 
     @Override
-    public void save(User entity) {
+    public boolean save(User entity) {
 
-        AsyncTask<User, Void,Void> asyncTask=new AsyncTask<User, Void, Void>(){
+        AsyncTask<User, Void,Boolean> asyncTask=new AsyncTask<User, Void, Boolean>(){
             @Override
-            protected Void doInBackground(User... users) {
+            protected Boolean doInBackground(User... users) {
                 try{
                     String user = gson.toJson(users[0]);
                     Response response=httpClient.requestPost("user/public/insertUser",user, false,null);
+                    if(response.isSuccessful()){
+                        return true;
+                    }
                 }catch (IOException ioException){
                     ioException.printStackTrace();
                 }
@@ -52,10 +55,11 @@ public class SpringUserDao extends UserDao {
             }
         };
         try {
-            asyncTask.execute(entity).get();
+            return  asyncTask.execute(entity).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override

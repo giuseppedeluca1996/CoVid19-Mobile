@@ -8,6 +8,7 @@ import com.example.covid19.dao.ReviewDao;
 import com.example.covid19.model.HttpClient;
 import com.example.covid19.model.Review;
 import com.example.covid19.model.Structure;
+import com.example.covid19.security.AuthManagerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -27,6 +28,7 @@ public class SpringReviewDao extends ReviewDao {
     private static SpringReviewDao instance;
     private Gson gson;
 
+
     private SpringReviewDao(Context context){
         gson = new Gson();
         httpClient=new HttpClient(context);
@@ -42,7 +44,29 @@ public class SpringReviewDao extends ReviewDao {
     }
 
     @Override
-    public void save(Review entity) {
+    public boolean save(Review entity) {
+        String json = gson.toJson(entity);
+        AsyncTask<String, Void,Boolean> asyncTask=new AsyncTask<String, Void, Boolean>(){
+            @Override
+            protected Boolean doInBackground(String... objects) {
+                try{
+                    Response response=httpClient.requestPost("review/insertReview", objects[0],true, AuthManagerFactory.getAuthManagerFactory(AuthManagerFactory.getContext()).getAuthManager().getAuthenticationString());
+                    if( response.isSuccessful()){
+                        return true;
+                    }
+                    return false;
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
+                return false;
+            }
+        };
+        try {
+             return asyncTask.execute(json).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
 
     }
 
@@ -102,5 +126,8 @@ public class SpringReviewDao extends ReviewDao {
         }
         return null;
     }
+
+
+
 
 }

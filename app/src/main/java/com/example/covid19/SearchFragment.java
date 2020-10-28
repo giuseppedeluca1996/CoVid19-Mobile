@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -126,6 +127,7 @@ public class SearchFragment extends Fragment {
         footer.setTextColor(Color.parseColor("#1589FF"));
         footer.setAllCaps(false);
         footer.setText("Search");
+        footer.setPaddingRelative(20,0,0,0);
         footer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +142,15 @@ public class SearchFragment extends Fragment {
 
         listView.setAdapter(whatever);
         listView.addFooterView(footer);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(type == Type.NOT_DEFINE)
+                    SearchController.getStructureByText(parent.getItemAtPosition(position).toString());
+                else
+                    SearchController.getStructureByText(parent.getItemAtPosition(position).toString(),type);
+            }
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

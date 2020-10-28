@@ -14,7 +14,7 @@ import java.util.Map;
 public abstract class StructureDao implements AbstractDao<Structure> {
 
     @Override
-    public abstract void save(Structure entity);
+    public abstract boolean save(Structure entity);
 
     @Override
     public abstract Structure update(Structure newEntity, Integer id);

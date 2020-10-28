@@ -1,11 +1,7 @@
 package com.example.covid19.controller;
 
-import android.app.Activity;
 import android.content.Context;
 
-import androidx.navigation.Navigation;
-
-import com.example.covid19.R;
 import com.example.covid19.dao.DaoFactory;
 import com.example.covid19.dao.ReviewDao;
 import com.example.covid19.model.Review;

@@ -8,7 +8,7 @@ import java.util.Map;
 public abstract class UserDao implements AbstractDao<User> {
 
     @Override
-    public abstract void save(User entity);
+    public abstract boolean save(User entity);
 
     @Override
     public abstract User update(User newEntity, Integer id);

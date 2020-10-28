@@ -10,31 +10,21 @@ public abstract class ReviewDao implements AbstractDao<Review> {
 
 
     @Override
-    public void save(Review entity) {
-
-    }
+    public  abstract boolean save(Review entity);
+    @Override
+    public abstract Review update(Review newEntity, Integer id);
 
     @Override
-    public Review update(Review newEntity, Integer id) {
-        return null;
-    }
+    public abstract void delete(Integer id);
 
     @Override
-    public void delete(Integer id) {
-
-    }
+    public abstract Review getById(Integer id);
 
     @Override
-    public Review getById(Integer id) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> getAll(Integer page, Integer size) {
-        return null;
-    }
+    public abstract Map<String, Object> getAll(Integer page, Integer size);
 
     public abstract  List<Review> getAllByIdStructure(Integer idStructure);
 
     public abstract Double getAvgRating(Integer idStructure);
+
 }

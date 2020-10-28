@@ -113,7 +113,8 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
                        ActivityCompat.requestPermissions( requireActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION},10001 );
                        return;
                    }
-                   Navigation.findNavController(view).navigate(R.id.action_homePage_to_mapsFragment);
+                   HomePageFragmentDirections.ActionHomePageToMapsFragment actionHomePageToMapsFragment = HomePageFragmentDirections.actionHomePageToMapsFragment(null);
+                   Navigation.findNavController(view).navigate(actionHomePageToMapsFragment);
                 }else {
                    showGPSDisabledAlertToUser();
                }

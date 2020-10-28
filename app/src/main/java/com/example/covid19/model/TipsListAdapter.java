@@ -17,13 +17,13 @@ public class TipsListAdapter extends ArrayAdapter {
     private final List<String> value;
 
 
+
     public TipsListAdapter(Activity context, List<String>value) {
         super(context, R.layout.search_tips, value);
         this.context = context;
         this.value = value;
     }
 
-    //TODO METODO UTILIZZATO PER POPOLARE I DATI DI OGNI RIGA!
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.search_tips, null, true);

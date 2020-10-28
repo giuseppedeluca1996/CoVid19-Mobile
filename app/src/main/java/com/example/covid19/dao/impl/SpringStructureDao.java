@@ -49,8 +49,8 @@ public class SpringStructureDao extends StructureDao {
     }
 
     @Override
-    public void save(Structure entity) {
-
+    public boolean save(Structure entity) {
+        return false;
     }
 
     @Override

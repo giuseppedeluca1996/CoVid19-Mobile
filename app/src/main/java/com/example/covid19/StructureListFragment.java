@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +16,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.covid19.controller.SearchController;
+import com.example.covid19.model.Review;
 import com.example.covid19.model.Structure;
 import com.example.covid19.model.StructureListAdapter;
 
@@ -28,6 +32,8 @@ import java.util.List;
     private RecyclerView structureRecycleView;
     private Button filterButton;
     private Button orderButton;
+    private Boolean isEmpty;
+    private TextView searchEmpty;
 
     private Structure[] structures;
 
@@ -49,6 +55,7 @@ import java.util.List;
         if(getArguments() != null){
             StructureListFragmentArgs args = StructureListFragmentArgs.fromBundle(getArguments());
             structures=args.getStructures();
+
         }
 
     }
@@ -81,5 +88,11 @@ import java.util.List;
          StructureListAdapter structureListAdapter= new StructureListAdapter(requireContext(), structures);
          structureRecycleView.setAdapter(structureListAdapter);
          structureRecycleView.setLayoutManager(new LinearLayoutManager(requireContext()));
-     }
+         searchEmpty=view.findViewById(R.id.searchEmpty);
+         if(structures.length==0){
+             searchEmpty.setVisibility(View.VISIBLE);
+         }else {
+             searchEmpty.setVisibility(View.INVISIBLE);
+         }
+    }
  }

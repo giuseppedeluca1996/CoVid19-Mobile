@@ -21,6 +21,7 @@ public class SignInController {
     public static Boolean signIn(String usernameOrEmail, String password, boolean asAGuest){
         if(asAGuest){
             showHomePage();
+            authManager.logOut();
             return true;
         }else {
 
