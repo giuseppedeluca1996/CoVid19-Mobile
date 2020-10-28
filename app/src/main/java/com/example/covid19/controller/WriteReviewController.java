@@ -29,7 +29,7 @@ public class WriteReviewController {
 
     public static Boolean  publicReview(Review review, Structure structure){
        if(reviewDao.save(review)){
-           WriteReviewFragmentDirections.ActionWriteReviewFragmentToSpecificStructureFragment actionWriteReviewFragmentToSpecificStructureFragment=WriteReviewFragmentDirections.actionWriteReviewFragmentToSpecificStructureFragment(structure,StructureViewController.getReviews(review.getExte_id()));
+           WriteReviewFragmentDirections.ActionWriteReviewFragmentToSpecificStructureFragment actionWriteReviewFragmentToSpecificStructureFragment=WriteReviewFragmentDirections.actionWriteReviewFragmentToSpecificStructureFragment(structure, Objects.requireNonNull(StructureViewController.getReviews(review.getExte_id())));
            navController.navigate(actionWriteReviewFragmentToSpecificStructureFragment);
            return true;
        }else {
