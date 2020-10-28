@@ -20,7 +20,7 @@ public class SignInController {
 
     public static Boolean signIn(String usernameOrEmail, String password, boolean asAGuest){
         if(asAGuest){
-            showHomePage();
+            HomePageActivity.showHomePageScreen(context);
             authManager.logOut();
             return true;
         }else {
@@ -31,7 +31,7 @@ public class SignInController {
             if(matcher.matches()){
                 try{
                     if(authManager.loginWithEmail(usernameOrEmail,password)){
-                        showHomePage();
+                        HomePageActivity.showHomePageScreen(context);
                         return  true;
                     }
                 }catch (UnauthorizedException ue){
@@ -40,7 +40,7 @@ public class SignInController {
             }else {
                 try{
                     if(authManager.loginWithUsername(usernameOrEmail,password)){
-                        showHomePage();
+                        HomePageActivity.showHomePageScreen(context);
                         return true;
                     }
                 }catch (UnauthorizedException ue){
@@ -51,9 +51,6 @@ public class SignInController {
         return false;
     }
 
-    public static void showHomePage() {
-        HomePageActivity.showHomePageScreen(context);
-    }
 
     public static void setContext(Context context) {
         SignInController.context = context;

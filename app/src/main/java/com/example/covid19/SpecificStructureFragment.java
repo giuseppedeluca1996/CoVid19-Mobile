@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -12,11 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -86,7 +91,7 @@ public class SpecificStructureFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController= Navigation.findNavController(requireActivity(),R.id.fragment);
 
@@ -177,10 +182,17 @@ public class SpecificStructureFragment extends Fragment {
         openOnMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LocationManager manager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE );
+                if( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ){
+                    showGPSDisabledAlertToUser();
+                    return;
+                }
                 SpecificStructureFragmentDirections.ActionSpecificStructureFragmentToMapsFragment actionSpecificStructureFragmentToMapsFragment=SpecificStructureFragmentDirections.actionSpecificStructureFragmentToMapsFragment(structure);
                 navController.navigate(actionSpecificStructureFragmentToMapsFragment);
             }
         });
+
+
     }
 
     public void getDialogValueBack(Context context) {
@@ -201,6 +213,27 @@ public class SpecificStructureFragment extends Fragment {
 
             }
         });
+        alert.show();
+    }
+
+    private  void showGPSDisabledAlertToUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(requireContext());
+        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Enable GPS",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
 
