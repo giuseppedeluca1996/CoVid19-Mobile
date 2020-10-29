@@ -1,15 +1,20 @@
 package com.example.covid19;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 
 import android.app.DatePickerDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -109,6 +114,25 @@ public class SignUpActivity extends AppCompatActivity  {
 
             }
         });
+        password.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().length() < 8){
+                    password.setError("Password  not valid!");
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+        });
         confirmPassword.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -138,7 +162,7 @@ public class SignUpActivity extends AppCompatActivity  {
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().isEmpty()){
-                    username.setError("name is empty!");
+                    username.setError("username is empty!");
                 }
             }
 
@@ -199,6 +223,7 @@ public class SignUpActivity extends AppCompatActivity  {
         });
 
 
+
         SignUpController.setContext(this);
     }
 
@@ -209,11 +234,13 @@ public class SignUpActivity extends AppCompatActivity  {
         int month = calendar.get(Calendar.MONDAY);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         DatePickerDialog dataPickerDialog=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 updateDateTextField(year,month,dayOfMonth);
             }
         }, year, month, day);
+        dataPickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
         dataPickerDialog.show();
 
     }

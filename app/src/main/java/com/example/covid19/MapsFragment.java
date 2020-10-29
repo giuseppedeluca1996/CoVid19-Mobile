@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 
 import com.example.covid19.controller.SearchController;
 import com.example.covid19.model.Structure;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,6 +51,10 @@ public class MapsFragment extends Fragment {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+
+
+    private LocationCallback locationCallback;
+
     GoogleMap map;
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -56,7 +63,12 @@ public class MapsFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                LatLng latLng = new LatLng(locationGPS.getLatitude(),locationGPS.getLongitude());
+                Location locationINTERNET = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                LatLng latLng;
+                if(locationGPS!=null)
+                  latLng= new LatLng(locationGPS.getLatitude(),locationGPS.getLongitude());
+                else
+                   latLng = new LatLng(locationINTERNET.getLatitude(),locationINTERNET.getLongitude());
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,12.0f));
                 googleMap.setMyLocationEnabled(true);
                 map=googleMap;
@@ -81,7 +93,6 @@ public class MapsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-
         locationManager = (LocationManager)requireActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener= new LocationListener() {
             @Override
@@ -91,9 +102,12 @@ public class MapsFragment extends Fragment {
         };
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            lastLocation=new LatLng(location.getLatitude(),location.getLongitude());
-
+            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location locationINTERNET = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(locationGPS!=null)
+                lastLocation= new LatLng(locationGPS.getLatitude(),locationGPS.getLongitude());
+            else
+                lastLocation = new LatLng(locationINTERNET.getLatitude(),locationINTERNET.getLongitude());
         }
         if(structure==null)
             structures= SearchController.getStructureAtDistance(lastLocation,DISTANCE_DEFAULT);
@@ -194,6 +208,18 @@ public class MapsFragment extends Fragment {
             if(mapsFragmentArgs.getStructure() != null)
                structure=mapsFragmentArgs.getStructure();
         }
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                        lastLocation=new LatLng(location.getLatitude(),location.getLongitude());
+                }
+            }
+        };
     }
 
     @Override

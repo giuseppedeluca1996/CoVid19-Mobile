@@ -130,7 +130,7 @@ public class WriteReviewFragment extends Fragment {
                         Toast toast = Toast.makeText(getContext(), "Review published", Toast.LENGTH_SHORT);
                         toast.show();
                     }else{
-                        Toast toast = Toast.makeText(getContext(), "The review was not posted due to an error!", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getContext(), "Structure already reviewed!", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 }
@@ -151,7 +151,7 @@ public class WriteReviewFragment extends Fragment {
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
                     alert.setTitle("Back pressed");
-                    alert.setMessage("if you go back, all the data entered will be lose!\nYou are sure?");
+                    alert.setMessage("if you go back, all the data entered will be lose!\nAre you sure?");
                     alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
