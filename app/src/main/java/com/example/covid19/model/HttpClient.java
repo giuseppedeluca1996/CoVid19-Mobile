@@ -22,13 +22,11 @@ public class HttpClient {
     private Context context;
 
     private  String serverUrl;
-    private  String initEndPoint;
 
     public HttpClient(Context context){
         this.context=context;
         try {
             serverUrl = Util.getProperty("server.url",context);
-            initEndPoint = Util.getProperty("initEndPoint.url",context);
         } catch (IOException e) {
             e.printStackTrace();
         }
