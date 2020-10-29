@@ -3,6 +3,7 @@ package com.example.covid19.dao.impl;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.covid19.dao.StructureDao;
 import com.example.covid19.model.Filter;
@@ -168,7 +169,7 @@ public class SpringStructureDao extends StructureDao {
                         return gson.fromJson(response.body().string(),new TypeToken<List<Structure>>() {}.getType());
                     }
                 }catch (IOException ioException){
-                    ioException.printStackTrace();
+                    Log.d("Test",ioException.getMessage());
                 }
                 return null;
             }

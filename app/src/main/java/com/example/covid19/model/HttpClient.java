@@ -37,7 +37,7 @@ public class HttpClient {
     public Response requestGet(String endPoint,boolean authorization, final String jwtToken) throws IOException {
         Request request;
 
-        httpUrl = Objects.requireNonNull(HttpUrl.parse(serverUrl+initEndPoint+endPoint)).newBuilder()
+        httpUrl = Objects.requireNonNull(HttpUrl.parse(serverUrl+endPoint)).newBuilder()
                 .build();
 
         if(!authorization){
@@ -58,7 +58,7 @@ public class HttpClient {
 
         Request request;
 
-        httpUrl = Objects.requireNonNull(HttpUrl.parse(serverUrl+initEndPoint+endPoint)).newBuilder()
+        httpUrl = Objects.requireNonNull(HttpUrl.parse(serverUrl+endPoint)).newBuilder()
                 .build();
 
         if(authorization){
